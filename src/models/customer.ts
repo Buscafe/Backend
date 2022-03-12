@@ -21,7 +21,7 @@ export async function insertUser({
     name,
     user_type
 }: InsertUserProps){
-    const userExists = await prisma.tbl_usuario.findUnique({
+    const userExists = await prisma.tbl_user.findUnique({
         where: {
             email: email
         }
@@ -33,17 +33,17 @@ export async function insertUser({
         const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
         const location = `${data.regionName}/${data.city}`
 
-        const user = await prisma.tbl_usuario.create({
+        const user = await prisma.tbl_user.create({
             data: { 
-                usuario: firstName,
-                nome: name,
-                religiao: religion,
+                user: firstName,
+                name: name,
+                religion: religion,
                 email: email,
-                senha: md5(pass),
-                localizacao: location,
+                password: md5(pass),
+                localization: location,
                 ip: ip,
-                tipo: `${user_type}`,
-                FK_id_estatus: 1,
+                type: `${user_type}`,
+                estatus: 1,
             }
         });
 
@@ -75,24 +75,24 @@ interface updateUserProps{
 export async function updateUser({email, pass, ip}: updateUserProps){
     if(pass !== ''){
         //UPDATE PASS
-        const user = await prisma.tbl_usuario.findUnique({
+        const user = await prisma.tbl_user.findUnique({
             where: {
                 email: email
             },
             select: {
                 ip: true,
-                id_usuario: true
+                id_user: true
             }
         });
 
         if(user){
             if(user.ip === ip){
-                const hasUpdate = await prisma.tbl_usuario.update({
+                const hasUpdate = await prisma.tbl_user.update({
                     where: {
-                        id_usuario: user.id_usuario
+                        id_user: user.id_user
                     },
                     data: {
-                        senha: pass
+                        password: pass
                     }
                 });
 
@@ -121,7 +121,7 @@ export async function updateUser({email, pass, ip}: updateUserProps){
         }
     } else {
         //UPDATE IP
-        const updateIp = await prisma.tbl_usuario.update({
+        const updateIp = await prisma.tbl_user.update({
             where: {
                 email: email
             }, 

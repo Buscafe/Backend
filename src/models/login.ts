@@ -14,31 +14,31 @@ interface LoginProps{
 }
 
 export async function loginUser({ email, pass, ip }: LoginProps) {
-    const user = await prisma.tbl_usuario.findUnique({
+    const user = await prisma.tbl_user.findUnique({
         where: {
             email: email
         },
         select: {
-            usuario: true,
-            nome: true,
-            religiao: true,
-            localizacao: true,
+            user: true,
+            name: true,
+            religion: true,
+            localization: true,
             email: true,
             ip: true,
-            tipo: true,
-            senha: true
+            type: true,
+            password: true
         }
     });
 
-    if(user && md5(pass) === user.senha) {
+    if(user && md5(pass) === user.password) {
         if(user.ip === ip){
             const formattedUser = {
-                "usuario": user.usuario,
-                "nome": user.nome,
-                "religiao": user.religiao,
+                "usuario": user.user,
+                "nome": user.name,
+                "religiao": user.religion,
                 "localizacao": {
-                    "estado": user.localizacao.split('/')[0],
-                    "cidade": user.localizacao.split('/')[1]
+                    "estado": user.localization.split('/')[0],
+                    "cidade": user.localization.split('/')[1]
                 },
                 "email": user.email,
             }
@@ -48,7 +48,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                 expiresIn: 300 // expires in 5min
             });
 
-            if(user.tipo === '1'){
+            if(user.type === '1'){
                 return{
                     'code'  : 1,
                     'msg'   : 'Conta pessoal',
