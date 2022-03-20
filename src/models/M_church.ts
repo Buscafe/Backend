@@ -3,24 +3,25 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function findAllChurches(religion: string){
-    const allChurches = await prisma.tbl_user.findMany({
-        where: {
-            religion,
-            type: '2'
-        },
-        select: {
-            tbl_corp: {
-                select: {
-                    id_corp: true,
-                    coordinate: true,
-                    corpName: true
-                }
+    try {
+        const allChurches = await prisma.tbl_user.findMany({
+            where: {
+                religion,
+                type: '2'
             },
-            localization: true
-        }
-    });
+            select: {
+                tbl_corp: {
+                    select: {
+                        id_corp: true,
+                        coordinate: true,
+                        corpName: true
+                    }
+                },
+                localization: true
+            }
+        });
 
-    if(allChurches){
+
         const formattedChurches = allChurches.map((church) => {
             return {
                 "id_corp": church.tbl_corp[0].id_corp,
@@ -37,10 +38,11 @@ export async function findAllChurches(religion: string){
         });
 
         return formattedChurches;
-    } else {
+    } catch (err) {
         return {
             'code': 1,
-            'msg' : 'Nenhuma igreja cadastrada na religião determinada'
+            'msg' : 'Nenhuma igreja cadastrada na religião determinada',
+            'err' : err 
         }
     }
 }

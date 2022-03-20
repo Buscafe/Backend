@@ -43,6 +43,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     "cidade": user.localization.split('/')[1]
                 },
                 "email": user.email,
+                "ip": user.ip
             }
 
             const secret = process.env.SECRET_JWT ?? '';
