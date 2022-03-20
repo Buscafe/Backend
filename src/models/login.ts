@@ -19,6 +19,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             email: email
         },
         select: {
+            id_user: true,
             user: true,
             name: true,
             religion: true,
@@ -33,6 +34,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
     if(user && md5(pass) === user.password) {
         if(user.ip === ip){
             const formattedUser = {
+                "id_user": user.id_user,
                 "usuario": user.user,
                 "nome": user.name,
                 "religiao": user.religion,
