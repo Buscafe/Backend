@@ -33,7 +33,7 @@ export async function insertUser({
         const { data } = await axios.get(`http://ip-api.com/json/${ip}`);
         const location = `${data.regionName}/${data.city}`
 
-        const user = await prisma.tbl_user.create({
+        const { id_user } = await prisma.tbl_user.create({
             data: { 
                 user: firstName,
                 name: name,
@@ -41,13 +41,23 @@ export async function insertUser({
                 email: email,
                 password: md5(pass),
                 localization: location,
-                ip: ip,
                 type: `${user_type}`,
                 estatus: 1,
+            },
+            select: {
+                id_user: true
             }
         });
 
-        if(user){
+        const insertIp = await prisma.tbl_devices.create({
+            data: {
+                ip,
+                FK_id_user: id_user,
+                status: 1
+            }
+        })
+
+        if(id_user && insertIp){
             return {
                 'code': 1,
                 'msg': 'Usuário Cadastrado Corretamente'
@@ -80,13 +90,16 @@ export async function updateUser({email, pass, ip}: updateUserProps){
                 email: email
             },
             select: {
-                ip: true,
                 id_user: true
             }
         });
 
         if(user){
-            if(user.ip === ip){
+            const hasDevice = await prisma.tbl_devices.findMany({
+                where: { ip } 
+            })
+
+            if(hasDevice){
                 const hasUpdate = await prisma.tbl_user.update({
                     where: {
                         id_user: user.id_user
@@ -121,25 +134,41 @@ export async function updateUser({email, pass, ip}: updateUserProps){
         }
     } else {
         //UPDATE IP
-        const updateIp = await prisma.tbl_user.update({
-            where: {
-                email: email
-            }, 
-            data: {
-                ip: ip
-            }
-        });
+        try {
+            const user = await prisma.tbl_user.findUnique({
+                where: { email },
+                select: { id_user: true }
+            })
+    
+            const updateIp = await prisma.tbl_devices.create({
+                data: {
+                    ip,
+                    FK_id_user: user?.id_user,
+                    status: 1
+                }
+            });
 
-        if(updateIp){
+            await prisma.tbl_devices.updateMany({
+                where: { status: 1 },
+                data: { status: 2 }
+            })
+    
+            if(updateIp){
+                return {
+                    'code' : 1,
+                    'msg' : 'Ip atualizado corretamente'
+                }
+            } else {
+                return {
+                    'code' : 2,
+                    'msg' : 'Houve um erro ao na atualização do ip'
+                }
+            }    
+        } catch (error) {
             return {
-                'code' : 1,
-                'msg' : 'Ip atualizado corretamente'
+                'status' : 'error',
+                'err' : error
             }
-        } else {
-            return {
-                'code' : 2,
-                'msg' : 'Houve um erro ao na atualização do ip'
-            }
-        } 
+        }
     }
 }

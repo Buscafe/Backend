@@ -22,7 +22,7 @@ export class UserController {
     
     async update(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'email', 'ip');
-
+        
         responseValidate.map(validate => {
             if(!validate.exists){
                 return res.json({'Error': `Missing parameter ${validate.field}`});
