@@ -172,3 +172,33 @@ export async function updateUser({email, pass, ip}: updateUserProps){
         }
     }
 }
+
+interface updateCoordinateProps{
+    id_user: number,
+    coordinate: string
+}
+export async function updateCoordinate({ id_user, coordinate }: updateCoordinateProps){
+    try {
+        const hasUpdate = await prisma.tbl_user.update({
+            where: { id_user },
+            data: { coordinate }
+        })
+
+        if(hasUpdate){
+            return {
+                'code' : 1,
+                'msg' : 'Coordenadas atualizadas corretamente'
+            }
+        } else {
+            return {
+                'code' : 2,
+                'msg' : 'Houve um erro ao atualizar as coordenadas'
+            }
+        }
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        }
+    }
+}

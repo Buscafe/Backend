@@ -40,6 +40,7 @@ model tbl_user {
   type         String         @db.VarChar(15)
   estatus      Int
   dtCreate     DateTime?      @default(now()) @db.DateTime(0)
+  coordinate   String?        @db.VarChar(150)
   tbl_corp     tbl_corp[]
   tbl_devices  tbl_devices[]
   tbl_relation tbl_relation[]

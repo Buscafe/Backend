@@ -24,6 +24,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             name: true,
             religion: true,
             localization: true,
+            coordinate: true,
             email: true,
             type: true,
             password: true
@@ -58,6 +59,10 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             "localizacao": {
                 "estado": user.localization.split('/')[0],
                 "cidade": user.localization.split('/')[1]
+            },
+            "coordinate": {
+                "lat": Number(user.coordinate?.split(',')[0]),
+                "lng": Number(user.coordinate?.split(',')[1])
             },
             "email": user.email,
             "devices": devices
