@@ -139,6 +139,11 @@ export async function updateUser({email, pass, ip}: updateUserProps){
                 where: { email },
                 select: { id_user: true }
             })
+            
+            await prisma.tbl_devices.updateMany({
+                where: { status: 1,  FK_id_user: user?.id_user,},
+                data: { status: 2 }
+            }
     
             const updateIp = await prisma.tbl_devices.create({
                 data: {
@@ -148,11 +153,6 @@ export async function updateUser({email, pass, ip}: updateUserProps){
                 }
             });
 
-            await prisma.tbl_devices.updateMany({
-                where: { status: 1 },
-                data: { status: 2 }
-            })
-    
             if(updateIp){
                 return {
                     'code' : 1,
