@@ -17,6 +17,7 @@ router.post('/login', loginUser.handle);
 router.post('/user/insert', user.insert);
 router.post('/user/update', user.update);
 router.post('/user/update/coordinate', user.updateCoords);
+router.delete('/user/delete/device', user.removeDevice)
 
 // Churches routes
 router.get('/allChurches/:religion', church.getAll)

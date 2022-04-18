@@ -37,6 +37,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                 FK_id_user: user.id_user,
             },
             select: {
+                id_device: true,
                 ip: true,
                 status: true,
                 dtCreate: true
