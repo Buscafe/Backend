@@ -12,7 +12,7 @@
     "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts"
   },
   "dependencies": {
-    "@prisma/client": "^3.9.2",
+    "@prisma/client": "^3.12.0",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.8",
