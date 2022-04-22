@@ -2,6 +2,9 @@ import express from 'express'
 import { router } from './routes';
 import { Server } from "socket.io";
 import http from 'http'
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app  = express();
 
