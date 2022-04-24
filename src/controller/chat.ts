@@ -16,10 +16,11 @@ export class ChatController {
             } 
         });
         
-        const getRoomsResponse = await findRooms(Number(req.params.id_user), String(req.params.church_name));
+        const getRoomsResponse = await findRooms(Number(req.params.id_user), req.params.church_name);
 
         return res.json(getRoomsResponse);
     }
+
     async getChurches(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'id_user');
 
