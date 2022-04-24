@@ -11,8 +11,9 @@ export async function findRooms(id_user: number, church_name: String){
                     }
                 }
             }
-        });
-        return allRooms
+        }).select('-_id chats');
+
+        return allRooms[0].chats
     } catch (error) {
         return {
             'status' : 'error',
@@ -30,7 +31,7 @@ export async function findChurches(id_user: number){
                     }
                 }
             }
-        });
+        }).select('-chats');
 
         return allChurches
     } catch (error) {
