@@ -26,7 +26,7 @@ router.get('/allChurches/:religion', church.getAll);
 router.post('/affiliate', church.joinChurch);
 
 // Chat routes
-router.get('/social/getRooms/:id_user/:church_name', chat.getRooms);
+router.get('/social/getRooms/:id_user/:roomId', chat.getRooms);
 router.get('/social/getChurches/:id_user', chat.getChurches);
 
 export { router };

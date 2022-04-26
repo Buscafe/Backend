@@ -1,12 +1,12 @@
 import { validateFields } from "../utils/validateHasProperty";
 import { Request, Response } from "express";
 
-import { findChurches, findRooms } from '../models/M_chat'
+import { findRooms, findChats } from '../models/M_chat'
 
 
 export class ChatController {
     async getRooms(req: Request, res: Response){
-        const responseValidate = validateFields(req.params, 'id_user', 'church_name');
+        const responseValidate = validateFields(req.params, 'id_user', 'roomId');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -16,7 +16,7 @@ export class ChatController {
             } 
         });
         
-        const getRoomsResponse = await findRooms(Number(req.params.id_user), req.params.church_name);
+        const getRoomsResponse = await findChats(Number(req.params.id_user), req.params.roomId);
 
         return res.json(getRoomsResponse);
     }
@@ -32,7 +32,7 @@ export class ChatController {
             } 
         });
         
-        const getRoomsResponse = await findChurches(Number(req.params.id_user));
+        const getRoomsResponse = await findRooms(Number(req.params.id_user));
 
         return res.json(getRoomsResponse);
     }

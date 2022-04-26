@@ -1,19 +1,15 @@
-import { rooms } from '../services/room' 
+import { rooms } from '../services/rooms' 
+import { chats } from '../services/chats';
 
-export async function findRooms(id_user: number, church_name: String){
+export async function findChats(id_user: number, RoomId: String){
     try {
-        const allRooms = await rooms.find({
-            name: church_name,
-            chats: {
-                $elemMatch: {
-                    users: {
-                        $elemMatch: { id_user }
-                    }
-                }
+        const allChats = await chats.find({
+            RoomId: RoomId,
+            users: {
+                $elemMatch: { id_user }
             }
-        }).select('-_id chats');
-
-        return allRooms[0].chats
+        });
+        return allChats;
     } catch (error) {
         return {
             'status' : 'error',
@@ -21,19 +17,20 @@ export async function findRooms(id_user: number, church_name: String){
         } 
     }
 }
-export async function findChurches(id_user: number){
+export async function findRooms(id_user: number){
     try {
-        const allChurches = await rooms.find({
-            chats: {
-                $elemMatch: {
-                    users: {
-                        $elemMatch: { id_user }
-                    }
-                }
+        const allRooms = await rooms.find({
+            users: {
+                $elemMatch: { idUser: id_user }
+            }   
+        });
+        if (!allRooms.length){
+            return {
+                'code': 2,
+                'msg': 'User dont have any chunch affiliate'
             }
-        }).select('-chats');
-
-        return allChurches
+        }
+        return allRooms;
     } catch (error) {
         return {
             'status' : 'error',
