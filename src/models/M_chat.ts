@@ -2,23 +2,6 @@ import { rooms } from '../services/rooms'
 import { chats } from '../services/chats';
 import { messages } from '../services/messages'
 
-export async function findChats(id_user: number, roomId: String){
-    try {
-        const allChats = await chats.find({
-            roomId: roomId,
-            users: {
-                $elemMatch: { id_user }
-            }
-        });
-        return allChats;
-    } catch (error) {
-        return {
-            'status' : 'error',
-            'err' : error
-        } 
-    }
-}
-
 export async function findRooms(id_user: number){
     try {
         const allRooms = await rooms.find({
@@ -35,6 +18,23 @@ export async function findRooms(id_user: number){
         }
 
         return allRooms;
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
+}
+
+export async function findChats(id_user: number, roomId: String){
+    try {
+        const allChats = await chats.find({
+            roomId: roomId,
+            users: {
+                $elemMatch: { "idUser": id_user }
+            }
+        });
+        return allChats;
     } catch (error) {
         return {
             'status' : 'error',
@@ -63,13 +63,13 @@ export async function getAllMenssages(chatId: number){
     }
 }
 
-export async function insertMessage(chatId: number, value: String, senderId: String){
+export async function insertMessage(chatId: number, value: String, senderId: String,sender: String){
     try {
         const message = await messages.insertMany({
             "chatId": chatId,
             "value": value,
             "senderId": senderId,
-            "createDt" :  new Date().toISOString().slice(0, 19).replace('T', ' ')
+            "sender": sender
         })
         if (message){
             return {

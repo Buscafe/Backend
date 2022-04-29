@@ -8,7 +8,7 @@ io.on("connection", (socket)  => {
         callback(await getAllMenssages(chatId))
     })
     socket.on('sendMessage', async (message, callback) => {
-        const messageResponse = await insertMessage(message.chatId, message.value, message.senderId)  
+        const messageResponse = await insertMessage(message.chatId, message.value, message.senderId, message.sender)  
         socket.broadcast.emit(
             'newMessage', messageResponse
         )
