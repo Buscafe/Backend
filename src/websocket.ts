@@ -14,4 +14,9 @@ io.on("connection", (socket)  => {
         )
         callback(messageResponse)
     })
+    socket.on('messageTyping', (data)=>{
+        socket.broadcast.emit(
+            'newMessageTyping', data
+        )
+    })
 }); 
