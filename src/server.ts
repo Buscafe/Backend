@@ -1,18 +1,9 @@
-import express from 'express'
-import { router } from './routes';
+import { serverHttp } from './http'
+import mongoose from 'mongoose';
+import './websocket'
 
-const app  = express();
 const port = process.env.PORT || 3333;
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-type');
-    next();
-});
+mongoose.connect(process.env.DATABASE_MONGO_URL ?? '', () => console.log('MongoDb has successfully connected !'));
 
-app.use(express.json());
-app.use(router);
-
-
-app.listen(port, () => { console.log(`🚀 Sever is running on port ${port}`) });
+serverHttp.listen(port, () => { console.log(`🚀 Sever is running on port ${port}`) });
