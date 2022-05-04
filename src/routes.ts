@@ -3,6 +3,7 @@ import { LoginUserController } from "./controller/acess";
 import { UserController } from "./controller/user";
 import { ChurchController } from "./controller/church";
 import { ChatController } from "./controller/chat";
+import { AdminController } from './controller/admin'
 
 
 const router = Router();
@@ -12,8 +13,7 @@ const loginUser = new LoginUserController();
 const user      = new UserController();
 const church    = new ChurchController();
 const chat      = new ChatController();
-const user = new UserController();
-const church = new ChurchController();
+const admin     = new AdminController();
 
 // Login Routes
 router.post('/login', loginUser.handle);
@@ -31,10 +31,19 @@ router.post('/affiliate', church.joinChurch);
 // Chat routes
 router.get('/social/getRooms/:id_user/:roomId', chat.getRooms);
 router.get('/social/getChurches/:id_user', chat.getChurches);
-router.delete('/user/delete/device', user.removeDevice)
 
-// Churches routes
-router.get('/allChurches/:religion', church.getAll)
-router.post('/affiliate', church.joinChurch)
+// Admin routes
+router.post('/admin/chat/insert', admin.insertChat);
+router.post('/admin/chat/insertUser', admin.insertUserChat);
+
+router.get('/admin/allChats/:roomId', admin.getChats);
+router.get('/admin/allUsers/:_id', admin.getAllUsers);
+router.get('/admin/allUsersChat/:roomId/:_id', admin.getAllUsersChat);
+
+router.post('/admin/update/chat', admin.updateChat);
+
+router.delete('/admin/delete/chat/:_id', admin.removeChat);
+router.delete('/admin/delete/userChat/:_id/:idUser', admin.removeUserChat);
+
 
 export { router };
