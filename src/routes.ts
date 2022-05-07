@@ -5,10 +5,8 @@ import { ChurchController } from "./controller/church";
 import { ChatController } from "./controller/chat";
 import { AdminController } from './controller/admin'
 
-
 const router = Router();
 
- 
 const loginUser = new LoginUserController();
 const user      = new UserController();
 const church    = new ChurchController();
@@ -23,10 +21,6 @@ router.post('/user/insert', user.insert);
 router.post('/user/update', user.update);
 router.post('/user/update/coordinate', user.updateCoords);
 router.delete('/user/delete/device', user.removeDevice);
-
-// Churches routes
-router.get('/allChurches/:religion', church.getAll);
-router.post('/affiliate', church.joinChurch);
 
 // Chat routes
 router.get('/social/getRooms/:id_user/:roomId', chat.getRooms);
