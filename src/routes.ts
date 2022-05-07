@@ -26,6 +26,10 @@ router.delete('/user/delete/device', user.removeDevice);
 router.get('/social/getRooms/:id_user/:roomId', chat.getRooms);
 router.get('/social/getChurches/:id_user', chat.getChurches);
 
+// Churches routes
+router.get('/allChurches/:religion', church.getAll)
+router.post('/affiliate', church.joinChurch)
+
 // Admin routes
 router.post('/admin/chat/insert', admin.insertChat);
 router.post('/admin/chat/insertUser', admin.insertUserChat);
@@ -38,6 +42,5 @@ router.post('/admin/update/chat', admin.updateChat);
 
 router.delete('/admin/delete/chat/:_id', admin.removeChat);
 router.delete('/admin/delete/userChat/:_id/:idUser', admin.removeUserChat);
-
 
 export { router };

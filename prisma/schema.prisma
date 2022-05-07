@@ -14,6 +14,7 @@ model tbl_corp {
   corpName     String         @db.VarChar(50)
   coordinate   String         @db.VarChar(150)
   corpDesc     String         @db.VarChar(200)
+  roomId       String?        @unique(map: "roomId") @db.VarChar(50)
   tbl_doc      tbl_doc?       @relation(fields: [FK_id_doc], references: [id_doc], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_doc")
   tbl_user     tbl_user?      @relation(fields: [FK_id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_user")
   tbl_relation tbl_relation[]

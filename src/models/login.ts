@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { chats } from '../services/chats';
 import jwt from 'jsonwebtoken';
 import md5 from 'md5'
 
@@ -11,6 +12,31 @@ interface LoginProps{
     email: string;
     pass: string
     ip: string;
+}
+interface User {
+    id_user: number;
+    usuario: string;
+    nome: string;
+    religiao: string;
+    localizacao: {
+        estado: string,
+        cidade: string
+    };
+    coordinate: {
+        lat: number,
+        lng: number
+    };
+    email: string;
+    devices: { 
+        id_device: number,
+        ip: string,
+        status: number | null,
+        dtCreate: Date | null 
+    }[];
+    church?: {
+        name: string,
+        roomId: string | null
+    } | null;
 }
 
 export async function loginUser({ email, pass, ip }: LoginProps) {
@@ -52,7 +78,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             }
         }
 
-        const formattedUser = {
+        let formattedUser: User = {
             "id_user": user.id_user,
             "usuario": user.user,
             "nome": user.name,
@@ -69,18 +95,40 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             "devices": devices
         }
 
-        const secret = process.env.SECRET_JWT ?? '';
-        const token = jwt.sign(formattedUser, secret, {
-            expiresIn: 300 // expires in 5min
-        });
-
         if(user.type === '1'){
+            const secret = process.env.SECRET_JWT ?? '';
+            const token = jwt.sign(formattedUser, secret, {
+                expiresIn: 300 // expires in 5min
+            });
+            
             return{
                 'code'  : 1,
                 'msg'   : 'Conta pessoal',
                 'token' : token
             }
         } else {
+            const church = await prisma.tbl_corp.findFirst({
+                where: { FK_id_user: user.id_user },
+                select: { 
+                    corpName: true,
+                    roomId: true
+                }
+            });
+
+            if(church){
+                formattedUser.church = {
+                    name: church.corpName,
+                    roomId: church.roomId
+                };
+            } else {
+                formattedUser.church = null;
+            }            
+
+            const secret = process.env.SECRET_JWT ?? '';
+            const token = jwt.sign(formattedUser, secret, {
+                expiresIn: 300 // expires in 5min
+            });
+
             return{
                 'code'  : 2,
                 'msg'   : 'Conta corporativa',
