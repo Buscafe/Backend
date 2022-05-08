@@ -21,7 +21,7 @@ export class AdminController {
             } 
         });
         
-        const insertChatResponse = await insertChatAdmin(req.body.roomId, req.body.name, req.body.users);
+        const insertChatResponse = await insertChatAdmin(req.body);
 
         return res.json(insertChatResponse);
     }
@@ -64,7 +64,7 @@ export class AdminController {
 
     // Encontrar os usuários de determinada igreja
     async getAllUsers(req: Request, res: Response){
-        const responseValidate = validateFields(req.params, '_id');
+        const responseValidate = validateFields(req.params, '_id', 'userId');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -74,7 +74,7 @@ export class AdminController {
             } 
         });
         
-        const getAllUsersResponse = await findAllUsers(req.params._id);
+        const getAllUsersResponse = await findAllUsers(req.params._id, Number(req.params.userId));
 
         return res.json(getAllUsersResponse);
     }

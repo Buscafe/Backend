@@ -35,7 +35,7 @@ router.post('/admin/chat/insert', admin.insertChat);
 router.post('/admin/chat/insertUser', admin.insertUserChat);
 
 router.get('/admin/allChats/:roomId', admin.getChats);
-router.get('/admin/allUsers/:_id', admin.getAllUsers);
+router.get('/admin/allUsers/:_id/:userId', admin.getAllUsers);
 router.get('/admin/allUsersChat/:roomId/:_id', admin.getAllUsersChat);
 
 router.post('/admin/update/chat', admin.updateChat);

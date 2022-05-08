@@ -4,21 +4,32 @@ import { rooms } from '../services/rooms';
 // --------------------------------------------CREATE ---------------------------------------
 
 // Inserir Chat em uma igreja
-export async function insertChatAdmin(roomId: String, name: String, users: String){
+interface insertChatAdminProps {
+    roomId: string;
+    name: string;
+    users: { idUser: number, name: string }[];
+}
+export async function insertChatAdmin({ roomId, name, users }: insertChatAdminProps){
     try {
         const chatExists = await chats.find({
             "roomId": roomId,
             "name": name
         })
-
-        if(!chatExists){
+        
+        if(chatExists.length === 0){
             const insertChat = await chats.insertMany({
                 'roomId': roomId,
                 'name': name, 
                 'users': users
             })
-            return insertChat;
+
+            return {
+                'code' : 1,
+                'msg' : 'Grupo criado com sucesso !',
+                'room': insertChat[0]
+            }
         }
+
         return {
             'code' : 2,
             'msg' : 'Este nome de grupo já existe! Insira um nome diferente'
@@ -86,13 +97,20 @@ export async function findChatsAdmin(roomId: String){
 }
 
 // Encontrar os usuários de determinada igreja
-export async function findAllUsers(_id: String){
+interface userChurch{
+    idUser: number;
+    name: string;
+}
+export async function findAllUsers(_id: String, userId: number){
     try {
         const allUsers = await rooms.find({
             '_id': _id
         }).select('-_id -name');
 
-        return allUsers;
+        let user: userChurch[] = allUsers[0].users
+        user = user.filter(user => user.idUser != userId);
+
+        return user;
     } catch (error) {
         return {
             'status' : 'error',
