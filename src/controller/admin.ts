@@ -38,7 +38,7 @@ export class AdminController {
             } 
         });
         
-        const insertUserChatResponse = await insertUserChatAdmin(req.body._id, req.body.users);
+        const insertUserChatResponse = await insertUserChatAdmin(req.body);
 
         return res.json(insertUserChatResponse);
     }

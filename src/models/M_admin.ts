@@ -44,19 +44,18 @@ export async function insertChatAdmin({ roomId, name, users }: insertChatAdminPr
 }
 
 // inserir Usuário em um Chat
-interface userArray{
-    users: String
+interface insertUserChatAdminProps {
+    _id: string;
+    users: { idUser: number, name: string }[];
 }
-export async function insertUserChatAdmin(_id: String, users: userArray[]){
+export async function insertUserChatAdmin({_id, users}: insertUserChatAdminProps){
     try {
-        console.log(users)
         const userChatExists = await chats.find({
             "_id" : _id, 
-            "users": {$elemMatch: {idUser: users.idUser}} 
+            "users": {$elemMatch: {users}} 
         })
-        console.log(userChatExists)
+
         if(!userChatExists){
-            console.log('Passou')
             const insertUserChat = await chats.updateOne(
                 {'_id': _id},
                 {$push : {
@@ -125,9 +124,9 @@ export async function findUsersChat(roomId: String, _id: String){
         const allUsersChat = await chats.find({
             '_id': _id,
             'roomId': roomId
-        }).select('-_id -roomId -name');
+        }).select('users');
 
-        return allUsersChat;
+        return allUsersChat[0].users;
     } catch (error) {
         return {
             'status' : 'error',
