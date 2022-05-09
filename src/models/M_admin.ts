@@ -3,7 +3,7 @@ import { rooms } from '../services/rooms';
 
 // --------------------------------------------CREATE ---------------------------------------
 
-// Inserir Chat em uma igreja
+// Insert Chat in a Church
 interface insertChatAdminProps {
     roomId: string;
     name: string;
@@ -43,30 +43,33 @@ export async function insertChatAdmin({ roomId, name, users }: insertChatAdminPr
     }
 }
 
-// inserir Usuário em um Chat
+// Update Chat
 interface insertUserChatAdminProps {
-    _id: string;
+    chatId: string;
+    name: string;
     users: { idUser: number, name: string }[];
 }
-export async function insertUserChatAdmin({_id, users}: insertUserChatAdminProps){
+export async function updateChatAdmin({chatId, name, users}: insertUserChatAdminProps){
     try {
-        const userChatExists = await chats.find({
-            "_id" : _id, 
-            "users": {$elemMatch: {users}} 
-        })
-
-        if(!userChatExists){
-            const insertUserChat = await chats.updateOne(
-                {'_id': _id},
-                {$push : {
-                    "users": users
-                }
-            })
-            return insertUserChat;
+        if (name.trim().length === 0){
+            return {
+                'code' : 2,
+                'msg' : 'O nome do Grupo não pode ser composto apenas por espaços em branco'
+            }
         }
-        return {
-            'code' : 2,
-            'msg' : 'Usuário já presente no grupo!'
+        if(name || users){
+            const chatUpdated = await chats.updateOne(
+                {'_id': chatId},
+                {$set: {
+                    'name': name
+                },$push : {
+                    'users': users
+                }})
+            return {
+                'code' : 1,
+                'msg' : 'Grupo Atualizado com sucesso',
+                'chat': chatUpdated
+            }
         }
 
     } catch (error) {
@@ -79,7 +82,7 @@ export async function insertUserChatAdmin({_id, users}: insertUserChatAdminProps
 
 // --------------------------------------------READ ---------------------------------------
 
-// Encontrar todos Chats da igreja
+// Get all Chats in a church
 export async function findChatsAdmin(roomId: String){
     try {
         const allChats = await chats.find({
@@ -95,7 +98,7 @@ export async function findChatsAdmin(roomId: String){
     }
 }
 
-// Encontrar os usuários de determinada igreja
+// Get all users from a Church
 interface userChurch{
     idUser: number;
     name: string;
@@ -118,7 +121,7 @@ export async function findAllUsers(_id: String, userId: number){
     }
 }
 
-// Encontrar os usuários de determinado chat
+// Get all Users from a Chat
 export async function findUsersChat(roomId: String, _id: String){
     try {
         const allUsersChat = await chats.find({
@@ -135,38 +138,8 @@ export async function findUsersChat(roomId: String, _id: String){
     }
 }
 
-// --------------------------------------------UPDATE ---------------------------------------
-// Atualizar nome do chat
-export async function updateChatName(_id: String, name: String){
-    try {
-        const chatUpdated = await chats.updateOne(
-            {'_id': _id},
-            {$set: {
-                'name': name
-            }}
-        );
-        console.log(chatUpdated)
-        if (chatUpdated.modifiedCount===1){
-            return {
-                'code' : 1,
-                'msg'  : 'Nome do grupo atualizado com sucesso!'
-            }
-        } else {
-            return {
-                'code' : 2,
-                'msg' : 'Houve um erro ao atualizar o nome do grupo!'
-            }
-        }
-    } catch (error) {
-        return {
-            'status' : 'error',
-            'err' : error
-        } 
-    }
-}
-
 // --------------------------------------------DELETE ---------------------------------------
-// Deletar Chat de determinada igreja
+// Delete a chat in a church
 export async function deleteChat(_id: String){
     try {
         const chatDeleted = await chats.remove({
@@ -192,25 +165,20 @@ export async function deleteChat(_id: String){
     }
 }
 
-// Deletar Usuário de determinado Chat
+// Delete a user in a chat
 export async function deleteUserChat(_id: String, idUser: String){
     try {
         const UserChatDeleted = await chats.updateOne(
             {'_id': _id},
             {$pull: {users: {'idUser': idUser}}}
         )
-
         if (UserChatDeleted.modifiedCount===1){
             return {
                 'code' : 1,
-                'msg'  : 'Usuário removido com sucesso!'
+                'msg'  : 'Usuário removido com sucesso!',
+                'user' : UserChatDeleted
             }
-        } else {
-            return {
-                'code' : 2,
-                'msg' : 'Houve um erro ao remover o usuário!'
-            }
-        }
+        } 
 
     } catch (error) {
         return {
