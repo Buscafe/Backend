@@ -1,15 +1,14 @@
 import { validateFields } from "../utils/validateHasProperty";
 import { Request, Response } from "express";
 
-import { insertChatAdmin, insertUserChatAdmin,
+import { insertChatAdmin, updateChatAdmin,
         findChatsAdmin, findUsersChat, findAllUsers, 
-        updateChatName,
         deleteChat, deleteUserChat
 } from "../models/M_admin";
 
 export class AdminController {
 // --------------------------------------------CREATE ---------------------------------------
-    // Inserir Chat em uma igreja
+    // Insert Chat in a Church
     async insertChat(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'roomId', 'name', 'users');
 
@@ -26,10 +25,10 @@ export class AdminController {
         return res.json(insertChatResponse);
     }
 
-    // inserir Usuário em um Chat
-    async insertUserChat(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, '_id', 'users');
-
+    // Update Chat
+    async updateChat(req: Request, res: Response){
+        const responseValidate = validateFields(req.body, 'chatId', 'name', 'users');
+        console.log(responseValidate)
         responseValidate.map(validate => {
             if(!validate.exists){
                 return res.json({'Error': `Missing parameter ${validate.field}`});
@@ -38,14 +37,14 @@ export class AdminController {
             } 
         });
         
-        const insertUserChatResponse = await insertUserChatAdmin(req.body);
+        const insertUserChatResponse = await updateChatAdmin(req.body);
 
         return res.json(insertUserChatResponse);
     }
 
 // --------------------------------------------READ ---------------------------------------
 
-    // Encontrar todos Chats da igreja
+    // Get all Chats in a church
     async getChats(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'roomId');
 
@@ -62,7 +61,7 @@ export class AdminController {
         return res.json(getChatsResponse);
     }
 
-    // Encontrar os usuários de determinada igreja
+    // Get all users from a Church
     async getAllUsers(req: Request, res: Response){
         const responseValidate = validateFields(req.params, '_id', 'userId');
 
@@ -79,7 +78,7 @@ export class AdminController {
         return res.json(getAllUsersResponse);
     }
 
-    // Encontrar os usuários de determinado chat
+    // Get all Users from a Chat
     async getAllUsersChat(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'roomId', '_id');
 
@@ -96,26 +95,8 @@ export class AdminController {
         return res.json(getAllUsersChatResponse);
     }
 
-// --------------------------------------------UPDATE ---------------------------------------
-    // Atualizar nome do chat
-    async updateChat(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, '_id', 'name');
-
-        responseValidate.map(validate => {
-            if(!validate.exists){
-                return res.json({'Error': `Missing parameter ${validate.field}`});
-            } else if (validate.empty){
-                return res.json({'Error': `Parameter ${validate.field} are empty`});
-            } 
-        });
-        
-        const updateChatResponse = await updateChatName(req.body._id, req.body.name);
-
-        return res.json(updateChatResponse);
-    }
-
     // --------------------------------------------DELETE ---------------------------------------
-    // Deletar Chat de determinada igreja
+    // Delete a chat in a church
     async removeChat(req: Request, res: Response){
         const responseValidate = validateFields(req.params, '_id');
 
@@ -132,7 +113,7 @@ export class AdminController {
         return res.json(removeChatResponse);
     }
 
-    // Deletar Usuário de determinado Chat
+    // Delete a user in a chat
     async removeUserChat(req: Request, res: Response){
         const responseValidate = validateFields(req.params, '_id', 'idUser');
 

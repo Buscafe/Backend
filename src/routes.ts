@@ -32,13 +32,12 @@ router.post('/affiliate', church.joinChurch)
 
 // Admin routes
 router.post('/admin/chat/insert', admin.insertChat);
-router.post('/admin/chat/insertUser', admin.insertUserChat);
+router.post('/admin/chat/update', admin.updateChat);
 
 router.get('/admin/allChats/:roomId', admin.getChats);
 router.get('/admin/allUsers/:_id/:userId', admin.getAllUsers);
 router.get('/admin/allUsersChat/:roomId/:_id', admin.getAllUsersChat);
 
-router.post('/admin/update/chat', admin.updateChat);
 
 router.delete('/admin/delete/chat/:_id', admin.removeChat);
 router.delete('/admin/delete/userChat/:_id/:idUser', admin.removeUserChat);
