@@ -63,18 +63,21 @@ export async function getAllMenssages(chatId: number){
     }
 }
 
-export async function insertMessage(chatId: number, value: String, senderId: String,sender: String){
+interface insertMessageProps{
+    chatId: number, 
+    value: String,
+    senderId: String,
+    sender: String,
+    status?: String
+}
+export async function insertMessage(message:insertMessageProps){
     try {
-        const message = await messages.insertMany({
-            "chatId": chatId,
-            "value": value,
-            "senderId": senderId,
-            "sender": sender
-        })
-        if (message){
+        const insertMessage = await messages.insertMany(message)
+
+        if (insertMessage){
             return {
                 "code": 1,
-                "message": message[0]
+                "message": insertMessage[0]
             }
         }else{
             return {
