@@ -149,12 +149,12 @@ export async function deleteChat(_id: String){
         if (chatDeleted.deletedCount===1){
             return {
                 'code' : 1,
-                'msg'  : 'Chat removido com sucesso'
+                'msg'  : 'Grupo removido com sucesso'
             }
         } else {
             return {
                 'code' : 2,
-                'msg' : 'Houve um erro ao excluir o Chat'
+                'msg' : 'Houve um erro ao excluir o Grupo'
             }
         }
     } catch (error) {
@@ -176,7 +176,6 @@ export async function deleteUserChat(_id: String, idUser: String){
             return {
                 'code' : 1,
                 'msg'  : 'Usuário removido com sucesso!',
-                'user' : UserChatDeleted
             }
         } 
 

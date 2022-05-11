@@ -14,9 +14,21 @@ io.on("connection", (socket)  => {
         )
         callback(messageResponse)
     })
-    socket.on('messageTyping', (data)=>{
+    socket.on('messageTyping', (data) => {
         socket.broadcast.emit(
             'newMessageTyping', data
+        )
+    })
+        // Arrumar --------------------------------------------------------------
+        socket.on('addChat', (data) => {
+        socket.broadcast.emit(
+            'newChat', data
+        )
+    })
+            // Arrumar --------------------------------------------------------------
+    socket.on('deleteChat', (data) => {
+        socket.broadcast.emit(
+            'deletedChat', data
         )
     })
 }); 
