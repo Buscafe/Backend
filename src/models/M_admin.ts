@@ -7,9 +7,10 @@ import { rooms } from '../services/rooms';
 interface insertChatAdminProps {
     roomId: string;
     name: string;
+    description: string;
     users: { idUser: number, name: string }[];
 }
-export async function insertChatAdmin({ roomId, name, users }: insertChatAdminProps){
+export async function insertChatAdmin({ roomId, name, description, users }: insertChatAdminProps){
     try {
         const chatExists = await chats.find({
             "roomId": roomId,
@@ -20,6 +21,7 @@ export async function insertChatAdmin({ roomId, name, users }: insertChatAdminPr
             const insertChat = await chats.insertMany({
                 'roomId': roomId,
                 'name': name, 
+                'description': description,
                 'users': users
             })
 
@@ -47,9 +49,10 @@ export async function insertChatAdmin({ roomId, name, users }: insertChatAdminPr
 interface insertUserChatAdminProps {
     chatId: string;
     name: string;
+    description: string;
     users: { idUser: number, name: string }[];
 }
-export async function updateChatAdmin({chatId, name, users}: insertUserChatAdminProps){
+export async function updateChatAdmin({chatId, name, description, users}: insertUserChatAdminProps){
     try {
         if (name.trim().length === 0){
             return {
@@ -57,14 +60,23 @@ export async function updateChatAdmin({chatId, name, users}: insertUserChatAdmin
                 'msg' : 'O nome do Grupo não pode ser composto apenas por espaços em branco'
             }
         }
-        if(name || users){
+        if (description.trim().length === 0){
+            return {
+                'code' : 2,
+                'msg' : 'A descrição do Grupo não pode ser composto apenas por espaços em branco'
+            }
+        }
+
+        if(name || description || users){
             const chatUpdated = await chats.updateOne(
                 {'_id': chatId},
                 {$set: {
-                    'name': name
+                    'name': name,
+                    'description': description
                 },$push : {
                     'users': users
-                }})
+                }}
+            )
             return {
                 'code' : 1,
                 'msg' : 'Grupo Atualizado com sucesso',

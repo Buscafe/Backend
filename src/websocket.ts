@@ -19,14 +19,28 @@ io.on("connection", (socket)  => {
             'newMessageTyping', data
         )
     })
-        // Arrumar --------------------------------------------------------------
-        socket.on('addChat', (data) => {
+    socket.on('addChat', (data) => {
+        // Pesquisar sobre filtro no socket.broadcast
+        // socket.join(data.roomId)
+        // socket.in(data.roomId).emit(
+        //     'deletedChat', data
+        // )
         socket.broadcast.emit(
             'newChat', data
         )
     })
-            // Arrumar --------------------------------------------------------------
+    // const rooms = [];
     socket.on('deleteChat', (data) => {
+        // Pesquisar sobre filtro no socket.broadcast
+        // é preciso realizar o filtro pelo id do socket
+        // Talvez se faz necessário armazenar o socket de todas as salas(igrejas)
+        
+        // function getCurrentChurch(id: String) {
+        //     return rooms.find(room => room.id === id);
+        //   }
+        // const user = getCurrentChurch(socket.id);
+        // io.to(user.room).emit('deletedChat', data);
+        
         socket.broadcast.emit(
             'deletedChat', data
         )

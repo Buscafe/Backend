@@ -10,7 +10,7 @@ export class AdminController {
 // --------------------------------------------CREATE ---------------------------------------
     // Insert Chat in a Church
     async insertChat(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'roomId', 'name', 'users');
+        const responseValidate = validateFields(req.body, 'roomId', 'description', 'name', 'users');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -27,7 +27,7 @@ export class AdminController {
 
     // Update Chat
     async updateChat(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'chatId', 'name', 'users');
+        const responseValidate = validateFields(req.body, 'chatId', 'name', 'description', 'users');
         console.log(responseValidate)
         responseValidate.map(validate => {
             if(!validate.exists){
