@@ -25,6 +25,7 @@ router.delete('/user/delete/device', user.removeDevice);
 // Chat routes
 router.get('/social/getRooms/:id_user/:roomId', chat.getRooms);
 router.get('/social/getChurches/:id_user', chat.getChurches);
+router.post('/social/delete/message/:_id', chat.removeMessage);
 
 // Churches routes
 router.get('/allChurches/:religion', church.getAll)

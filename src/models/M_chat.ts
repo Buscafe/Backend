@@ -91,3 +91,19 @@ export async function insertMessage(message:insertMessageProps){
         } 
     }
 }
+export async function deleteMessage(_id: String){
+    try {
+        const messageDeleted = await messages.updateOne(
+            {'_id': _id},
+            {$set: {
+                'value': 'Mensagem apagada...',
+                'status': 'deleteMensagem'
+            }}
+        )
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
+}
