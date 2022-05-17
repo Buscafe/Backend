@@ -183,7 +183,6 @@ export async function updateCoordinate({ id_user, coordinate }: updateCoordinate
             where: { id_user },
             data: { coordinate }
         })
-
         if(hasUpdate){
             return {
                 'code' : 1,
@@ -195,6 +194,29 @@ export async function updateCoordinate({ id_user, coordinate }: updateCoordinate
                 'msg' : 'Houve um erro ao atualizar as coordenadas'
             }
         }
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        }
+    }
+}
+
+interface updateUserAdminProps{
+    id_user: number,
+    church: {
+        name: string,
+        roomId: string
+    } 
+}
+export async function updateUserAdmin({ id_user, church}: updateUserAdminProps){
+    try {
+        console.log('sera')
+        const hasUpdate = await prisma.tbl_user.update({
+            where: { id_user },
+            data: church
+        })
+        console.log(hasUpdate)
     } catch (error) {
         return {
             'status' : 'error',

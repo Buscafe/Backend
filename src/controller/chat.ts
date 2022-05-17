@@ -38,7 +38,7 @@ export class ChatController {
     }
 
     async removeMessage(req: Request, res: Response){
-        const responseValidate = validateFields(req.params, '_id');
+        const responseValidate = validateFields(req.params, '_id', 'chatId');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -48,7 +48,7 @@ export class ChatController {
             } 
         });
         
-        const removeMessageResponse = await deleteMessage(req.params._id);
+        const removeMessageResponse = await deleteMessage(req.params._id, req.params.chatId);
 
         return res.json(removeMessageResponse);
     }

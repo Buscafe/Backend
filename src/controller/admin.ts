@@ -1,13 +1,29 @@
 import { validateFields } from "../utils/validateHasProperty";
 import { Request, Response } from "express";
 
-import { insertChatAdmin, updateChatAdmin,
+import { insertRoomAdmin, insertChatAdmin, updateChatAdmin,
         findChatsAdmin, findUsersChat, findAllUsers, 
         deleteChat, deleteUserChat
 } from "../models/M_admin";
 
 export class AdminController {
 // --------------------------------------------CREATE ---------------------------------------
+    // Insert Church
+    async insertRoom(req: Request, res: Response){
+        const responseValidate = validateFields(req.body, 'name', 'users');
+
+        responseValidate.map(validate => {
+            if(!validate.exists){
+                return res.json({'Error': `Missing parameter ${validate.field}`});
+            } else if (validate.empty){
+                return res.json({'Error': `Parameter ${validate.field} are empty`});
+            } 
+        });
+
+        const insertRoomResponse = await insertRoomAdmin(req.body);
+
+        return res.json(insertRoomResponse);
+    }
     // Insert Chat in a Church
     async insertChat(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'roomId', 'description', 'name', 'users');
@@ -28,7 +44,6 @@ export class AdminController {
     // Update Chat
     async updateChat(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'chatId', 'name', 'description', 'users');
-        console.log(responseValidate)
         responseValidate.map(validate => {
             if(!validate.exists){
                 return res.json({'Error': `Missing parameter ${validate.field}`});

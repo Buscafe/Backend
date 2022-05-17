@@ -3,6 +3,31 @@ import { rooms } from '../services/rooms';
 
 // --------------------------------------------CREATE ---------------------------------------
 
+// Insert Church
+interface insertRoomAdminProps {
+    name: string;
+    users: { idUser: number, name: string }[];
+}
+export async function insertRoomAdmin({ name, users }: insertRoomAdminProps){
+    try {
+        const insertRooms = await rooms.insertMany({
+            'name': name, 
+            'users': users
+        })
+        
+        return {
+            'code' : 1,
+            'msg' : 'Igreja Cadastrada sucesso!',
+            'room': insertRooms[0]
+        }
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
+}
+
 // Insert Chat in a Church
 interface insertChatAdminProps {
     roomId: string;
@@ -27,7 +52,7 @@ export async function insertChatAdmin({ roomId, name, description, users }: inse
 
             return {
                 'code' : 1,
-                'msg' : 'Grupo criado com sucesso !',
+                'msg' : 'Grupo criado com sucesso!',
                 'room': insertChat[0]
             }
         }

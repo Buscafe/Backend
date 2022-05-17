@@ -91,7 +91,7 @@ export async function insertMessage(message:insertMessageProps){
         } 
     }
 }
-export async function deleteMessage(_id: String){
+export async function deleteMessage(_id: String, chatId: String){
     try {
         const messageDeleted = await messages.updateOne(
             {'_id': _id},
@@ -100,6 +100,9 @@ export async function deleteMessage(_id: String){
                 'status': 'deleteMensagem'
             }}
         )
+        const allMenssages = await messages.find({ chatId })
+
+        return allMenssages
     } catch (error) {
         return {
             'status' : 'error',
