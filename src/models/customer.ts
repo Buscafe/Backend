@@ -202,30 +202,6 @@ export async function updateCoordinate({ id_user, coordinate }: updateCoordinate
     }
 }
 
-interface updateUserAdminProps{
-    id_user: number,
-    church: {
-        name: string,
-        roomId: string
-    } 
-}
-export async function updateUserAdmin({ id_user, church}: updateUserAdminProps){
-    try {
-        console.log('sera')
-        const hasUpdate = await prisma.tbl_user.update({
-            where: { id_user },
-            data: church
-        })
-        console.log(hasUpdate)
-    } catch (error) {
-        return {
-            'status' : 'error',
-            'err' : error
-        }
-    }
-}
-
-
 export async function removeIp( id: number ){
         const removeDevice = await prisma.tbl_devices.delete({
             where: {

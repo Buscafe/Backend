@@ -10,7 +10,7 @@ export class AdminController {
 // --------------------------------------------CREATE ---------------------------------------
     // Insert Church
     async insertRoom(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'name', 'users');
+        const responseValidate = validateFields(req.body, 'name', 'description', 'cpf', 'cnpj', 'users', 'idUser', 'coords');
 
         responseValidate.map(validate => {
             if(!validate.exists){

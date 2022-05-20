@@ -20,7 +20,6 @@ router.post('/login', loginUser.handle);
 router.post('/user/insert', user.insert);
 router.post('/user/update', user.update);
 router.post('/user/update/coordinate', user.updateCoords);
-router.post('/user/update/admin', user.updateAdmin)
 router.delete('/user/delete/device', user.removeDevice);
 
 // Chat routes
