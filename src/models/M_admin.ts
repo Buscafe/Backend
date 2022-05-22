@@ -24,14 +24,11 @@ export async function insertRoomAdmin({ name, description, cpf, cnpj, users, idU
             'users': users
         })
         const insertDoc = await prisma.tbl_doc.create({
-            data: {
-                cpf,
-                cnpj
-            },
+            data: { cpf, cnpj},
         })
 
-        const id = insertRooms[0]._id.toString().split('"')[0]
-        const insertChurch = await prisma.tbl_corp.create({
+        const id = insertRooms[0]._id.toString().split('"')[0] // Removing Obejct id notation and saving only the id  
+        await prisma.tbl_corp.create({
             data: {
                 FK_id_user: idUser,
                 FK_id_doc: insertDoc.id_doc,
@@ -40,12 +37,17 @@ export async function insertRoomAdmin({ name, description, cpf, cnpj, users, idU
                 corpDesc: description,
                 roomId: id,
             },
-        })
+        });
+
+        const formattedChurch = {
+            "name": name,
+            "roomId": id
+        }
 
         return {
             'code' : 1,
             'msg' : 'Igreja Cadastrada sucesso!',
-            'room': insertRooms[0]
+            'room': formattedChurch
         }
 
     } catch (error) {
