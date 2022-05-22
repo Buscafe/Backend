@@ -203,22 +203,21 @@ export async function updateCoordinate({ id_user, coordinate }: updateCoordinate
 }
 
 export async function removeIp( id: number ){
+    try {
         const removeDevice = await prisma.tbl_devices.delete({
             where: {
                 id_device: id
             }
         });
 
-        if (removeDevice) {
-            return {
-                'code' : 1,
-                'msg'  : 'Dispositivo removido com sucesso'
-            }
-        } else {
-            return {
-                'code' : 2,
-                'msg' : 'Houve um erro ao excluir o dispositivo'
-            }
+        return {
+            'code' : 1,
+            'msg'  : 'Dispositivo removido com sucesso'
         }
-    
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        }
+    }
 }
