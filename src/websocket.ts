@@ -14,16 +14,17 @@ io.on("connection", (socket)  => {
         )
         callback(messageResponse)
     })
+
     socket.on('messageTyping', (data) => {
         socket.broadcast.emit(
             'newMessageTyping', data
         )
     })
-    socket.on('join', chat=>{
-        socket.join(chat)
-    })
+    // socket.on('join', chat=>{
+    //     socket.join(chat)
+    // })
     socket.on('addChat', (data, chatId) => {
-        socket.broadcast.to(chatId).emit(
+        socket.broadcast.emit(
             'newChat', data
         )
     })
