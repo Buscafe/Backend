@@ -111,7 +111,8 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                 where: { FK_id_user: user.id_user },
                 select: { 
                     corpName: true,
-                    roomId: true
+                    roomId: true,
+                    coordinate: true
                 }
             });
 
@@ -119,6 +120,10 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                 formattedUser.church = {
                     name: church.corpName,
                     roomId: church.roomId
+                };
+                formattedUser.coordinate = {
+                    lat: Number(church.coordinate?.split(',')[0]),
+                    lng: Number(church.coordinate?.split(',')[1])
                 };
             } else {
                 formattedUser.church = null;
