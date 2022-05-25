@@ -13,6 +13,7 @@ const ChatsSchema = new mongoose.Schema({
         name: String,
         description: String,
         users: [{type: UserSchema, required: true}],
+        adminUser: {idUser: String, name: String}
     },
     { timestamps: true }
 );

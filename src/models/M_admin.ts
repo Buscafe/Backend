@@ -65,8 +65,9 @@ interface insertChatAdminProps {
     name: string;
     description: string;
     users: { idUser: number, name: string }[];
+    adminUser: { idUser: number, name: string };
 }
-export async function insertChatAdmin({ roomId, name, description, users }: insertChatAdminProps){
+export async function insertChatAdmin({ roomId, name, description, users, adminUser }: insertChatAdminProps){
     try {
         const chatExists = await chats.find({
             "roomId": roomId,
@@ -75,10 +76,11 @@ export async function insertChatAdmin({ roomId, name, description, users }: inse
         
         if(chatExists.length === 0){
             const insertChat = await chats.insertMany({
-                'roomId': roomId,
-                'name': name, 
-                'description': description,
-                'users': users
+                roomId,
+                name, 
+                description,
+                users,
+                adminUser
             })
 
             return {

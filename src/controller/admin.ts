@@ -26,7 +26,7 @@ export class AdminController {
     }
     // Insert Chat in a Church
     async insertChat(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'roomId', 'description', 'name', 'users');
+        const responseValidate = validateFields(req.body, 'roomId', 'description', 'name', 'users', 'adminUser');
 
         responseValidate.map(validate => {
             if(!validate.exists){
