@@ -2,6 +2,8 @@ import { rooms } from '../services/rooms'
 import { chats } from '../services/chats';
 import { messages } from '../services/messages'
 
+import { Message } from '../types/webSocketTypes'
+
 export async function findRooms(id_user: number){
     try {
         const allRooms = await rooms.find({
@@ -43,7 +45,7 @@ export async function findChats(id_user: number, roomId: String){
     }
 }
 
-export async function getAllMenssages(chatId: number){
+export async function getAllMenssages(chatId: string){
     try {
         const allMenssages = await messages.find({ chatId })
 
@@ -63,14 +65,7 @@ export async function getAllMenssages(chatId: number){
     }
 }
 
-interface insertMessageProps{
-    chatId: number, 
-    value: String,
-    senderId: String,
-    sender: String,
-    status?: String
-}
-export async function insertMessage(message:insertMessageProps){
+export async function insertMessage(message: Message){
     try {
         const insertMessage = await messages.insertMany(message)
 

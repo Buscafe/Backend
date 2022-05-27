@@ -105,7 +105,7 @@ export async function updateUser({email, pass, ip}: updateUserProps){
                         id_user: user.id_user
                     },
                     data: {
-                        password: pass
+                        password: md5(pass)
                     }
                 });
 
