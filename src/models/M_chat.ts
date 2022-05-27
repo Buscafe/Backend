@@ -48,7 +48,6 @@ export async function findChats(id_user: number, roomId: String){
 export async function getAllMenssages(chatId: string){
     try {
         const allMenssages = await messages.find({ chatId })
-
         if (!allMenssages.length){
             return {
                 'code': 2,

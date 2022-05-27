@@ -86,7 +86,7 @@ export async function insertChatAdmin({ roomId, name, description, users, adminU
             return {
                 'code' : 1,
                 'msg' : 'Grupo criado com sucesso!',
-                'room': insertChat[0]
+                'chat': insertChat[0]
             }
         }
 
