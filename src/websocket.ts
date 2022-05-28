@@ -10,49 +10,75 @@ import {
     DeleteChatProps
 } from './types/webSocketTypes'
 
+
+const users: {userId: string, socketId: string}[] = [];
+
+const addUser = (userId: string, socketId: string) => {
+    !users.some(user => user.userId === userId) &&
+      users.push({ userId, socketId });
+};
+
 io.on("connection", socket  => {   
     console.log(`Socket connected ! session id: ${socket.id}`)
+    
+    socket.on('join', userId  => {
+        addUser(userId, socket.id)
+    })
 
     // Take all messages in a chat
     socket.on('getMensages', async (chatId, callback) => {
-        socket.join(chatId);
-
         callback(await getAllMenssages(chatId))
     })
     // Send new message
     socket.on('sendMessage', async (message: Message, callback) => {
-        const messageResponse = await insertMessage(message)  
-        socket.to(message.chatId).emit('newMessage', messageResponse)
+        const messageResponse = await insertMessage(message) 
+
+        users.map(user => {
+            console.log(user)
+            socket.to(user.socketId).emit('newMessage', messageResponse)
+        }) 
+        
         callback(messageResponse)
     })
     // When a user delete a message
     socket.on('updateMessages', (data: Message, chatId: string) =>{
-        console.log(data)
-        socket.to(chatId).emit('updatedMessages', data)
+        users.map(user => {
+            socket.to(user.socketId).emit('updatedMessages', data)
+        })
     })
     // Identify who is typing a message
     socket.on('messageTyping', (data: MessageTypingProps) => {
-        socket.to(data.chatId).emit('newMessageTyping', data)
+        users.map(user => {
+            socket.to(user.socketId).emit('newMessageTyping', data)
+        })
     })
     // User leave the group
-    socket.on('deleteUser', (data: DeleteUserProps) => {      
-        socket.to(data.chatId).emit('deletedUser', data)
+    socket.on('deleteUser', (data: DeleteUserProps) => {  
+        users.map(user => {
+            socket.to(user.socketId).emit('deletedUser', data)
+        })    
     })
     // User kicked out the group
     // Vamos ter que enviar apenas ao usuario deletado
     socket.on('kickedOut', (data: KickedOutProps) => {
-        socket.to(data.chatId).emit('userKickedOut', data)
+        users.map(user => {
+            socket.to(user.socketId).emit('userKickedOut', data)
+        })   
     })
     // Add group
     socket.on('addChat', (data: AddChatProps) => {
-        socket.to(data.chatId).emit('newChat', data)
+        socket.emit('newChat', data)
     })
     // When admin user update chat info
     socket.on('updateChat', (data: {chatId: string, roomId: string}) => {
-        socket.to(data.chatId).emit('updatedChat', data)
+        users.map(user => {
+            socket.to(user.socketId).emit('updatedChat', data)
+        })
     })
     // Delete a group
     socket.on('deleteChat', (data: DeleteChatProps) => {      
-        socket.to(data.chatId).emit('deletedChat', data)
+        users.map(user => {
+            socket.to(user.socketId).emit('deletedChat', data)
+        })  
     })
 }); 
