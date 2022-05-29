@@ -18,9 +18,7 @@ const addUser = (userId: string, socketId: string) => {
       users.push({ userId, socketId });
 };
 
-io.on("connection", socket  => {   
-    console.log(`Socket connected ! session id: ${socket.id}`)
-    
+io.on("connection", socket  => {       
     socket.on('join', userId  => {
         addUser(userId, socket.id)
     })
@@ -34,7 +32,6 @@ io.on("connection", socket  => {
         const messageResponse = await insertMessage(message) 
 
         users.map(user => {
-            console.log(user)
             socket.to(user.socketId).emit('newMessage', messageResponse)
         }) 
         

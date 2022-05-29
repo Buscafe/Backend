@@ -51,7 +51,6 @@ export async function insertRoomAdmin({ name, description, cpf, cnpj, users, idU
         }
 
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -148,6 +147,13 @@ export async function updateChatAdmin({chatId, name, description, users}: insert
             'err' : error
         } 
     }
+}
+// Affiliate user
+interface insertUserChatAdminProps {
+    chatId: string;
+    name: string;
+    description: string;
+    users: { idUser: number, name: string }[];
 }
 
 // --------------------------------------------READ ---------------------------------------
