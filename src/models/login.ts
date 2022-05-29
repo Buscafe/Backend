@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { chats } from '../services/chats';
 import jwt from 'jsonwebtoken';
 import md5 from 'md5'
+import { User } from '../types/userTypes';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -13,32 +13,6 @@ interface LoginProps{
     pass: string
     ip: string;
 }
-interface User {
-    id_user: number;
-    usuario: string;
-    nome: string;
-    religiao: string;
-    localizacao: {
-        estado: string,
-        cidade: string
-    };
-    coordinate: {
-        lat: number,
-        lng: number
-    };
-    email: string;
-    devices: { 
-        id_device: number,
-        ip: string,
-        status: number | null,
-        dtCreate: Date | null 
-    }[];
-    church?: {
-        name: string,
-        roomId: string | null
-    } | null;
-}
-
 export async function loginUser({ email, pass, ip }: LoginProps) {
     const user = await prisma.tbl_user.findUnique({
         where: {

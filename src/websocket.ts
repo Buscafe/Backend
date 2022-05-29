@@ -1,5 +1,5 @@
 import { io } from './http';
-import { getAllMenssages, insertMessage} from './models/M_chat'
+import { getAllMenssages, insertMessage } from './models/M_chat'
 
 import { 
     AddChatProps, 
