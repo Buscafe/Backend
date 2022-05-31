@@ -11,7 +11,6 @@ export interface MessageTypingProps{
     username: string,
     chatId: string
 }
-
 interface User {
     idUser: string,
     name: string,
@@ -52,4 +51,9 @@ export interface DeleteChatProps {
     churchName: string,
     roomId: string,
     chatId: string
+}
+
+export interface UsersOnline {
+    userId: string   
+   socketId:string 
 }
