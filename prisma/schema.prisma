@@ -15,8 +15,12 @@ model tbl_corp {
   coordinate   String         @db.VarChar(150)
   corpDesc     String         @db.VarChar(200)
   roomId       String?        @unique(map: "roomId") @db.VarChar(50)
+  color        String?        @db.VarChar(7)
   tbl_doc      tbl_doc?       @relation(fields: [FK_id_doc], references: [id_doc], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_doc")
   tbl_user     tbl_user?      @relation(fields: [FK_id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_user")
+  tbl_donate   tbl_donate[]
+  tbl_info     tbl_info?
+  tbl_meeting  tbl_meeting[]
   tbl_relation tbl_relation[]
 
   @@index([FK_id_doc], map: "FK_id_doc")
@@ -68,4 +72,49 @@ model tbl_relation {
 
   @@index([FK_id_corp], map: "RFK_id_corp")
   @@index([FK_id_user], map: "RFK_id_user")
+}
+
+model tbl_donate {
+  id_donate  Int                  @id @default(autoincrement())
+  FK_id_corp Int?
+  key_type   tbl_donate_key_type?
+  donate_key String?              @db.VarChar(255)
+  tbl_corp   tbl_corp?            @relation(fields: [FK_id_corp], references: [id_corp], onDelete: NoAction, onUpdate: NoAction, map: "FK_donate_id_corp")
+
+  @@index([FK_id_corp], map: "FK_donate_id_corp")
+}
+
+model tbl_info {
+  id_info       Int       @id @default(autoincrement())
+  FK_id_corp    Int?      @unique(map: "FK_id_corp")
+  cellphone     String?   @db.VarChar(15)
+  email         String?   @db.VarChar(255)
+  link          String?   @db.VarChar(2048)
+  seats         Int?
+  parking       Boolean?
+  accessibility Boolean?
+  tbl_corp      tbl_corp? @relation(fields: [FK_id_corp], references: [id_corp], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_corp")
+}
+
+model tbl_meeting {
+  id_meeting       Int       @id @default(autoincrement())
+  FK_id_corp       Int?
+  meeting_name     String?   @db.VarChar(255)
+  meeting_desc     String?   @db.VarChar(255)
+  adress           String?   @db.VarChar(255)
+  meeting_time     DateTime? @db.Time(0)
+  meeting_duration Int?
+  meeting_date     DateTime? @db.Date
+  meeting_days     String?   @db.VarChar(255)
+  tbl_corp         tbl_corp? @relation(fields: [FK_id_corp], references: [id_corp], onDelete: NoAction, onUpdate: NoAction, map: "FK_meeting_id_corp")
+
+  @@index([FK_id_corp], map: "FK_meeting_id_corp")
+}
+
+enum tbl_donate_key_type {
+  CPF
+  CNPJ
+  email
+  celular
+  chave_aleatoria @map("chave aleatoria")
 }

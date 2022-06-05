@@ -84,6 +84,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             const church = await prisma.tbl_corp.findFirst({
                 where: { FK_id_user: user.id_user },
                 select: { 
+                    id_corp: true,
                     corpName: true,
                     roomId: true,
                     coordinate: true
@@ -93,7 +94,8 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             if(church){
                 formattedUser.church = {
                     name: church.corpName,
-                    roomId: church.roomId
+                    roomId: church.roomId,
+                    id_corp: church.id_corp,
                 };
                 formattedUser.coordinate = {
                     lat: Number(church.coordinate?.split(',')[0]),

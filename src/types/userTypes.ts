@@ -20,6 +20,7 @@ export interface User {
     }[];
     church?: {
         name: string,
-        roomId: string | null
+        roomId: string | null,
+        id_corp: number
     } | null;
 }
