@@ -7,57 +7,6 @@ const prisma = new PrismaClient();
 
 // --------------------------------------------CREATE ---------------------------------------
 
-// Insert Church
-interface insertRoomAdminProps {
-    name: string;
-    description: string,
-    cpf: string,
-    cnpj: string,
-    users: { idUser: number, name: string }[];
-    idUser: number,
-    coords: {lat: number, lng: number};
-}
-export async function insertRoomAdmin({ name, description, cpf, cnpj, users, idUser, coords}: insertRoomAdminProps){
-    try {
-        const insertRooms = await rooms.insertMany({
-            'name': name, 
-            'users': users
-        })
-        const insertDoc = await prisma.tbl_doc.create({
-            data: { cpf, cnpj},
-        })
-
-        const id = insertRooms[0]._id.toString().split('"')[0] // Removing Obejct id notation and saving only the id  
-        await prisma.tbl_corp.create({
-            data: {
-                FK_id_user: idUser,
-                FK_id_doc: insertDoc.id_doc,
-                corpName: name,
-                coordinate: `${coords.lat},${coords.lng}`,
-                corpDesc: description,
-                roomId: id,
-            },
-        });
-
-        const formattedChurch = {
-            "name": name,
-            "roomId": id
-        }
-
-        return {
-            'code' : 1,
-            'msg' : 'Igreja Cadastrada sucesso!',
-            'room': formattedChurch
-        }
-
-    } catch (error) {
-        return {
-            'status' : 'error',
-            'err' : error
-        } 
-    }
-}
-
 // Insert Chat in a Church
 interface insertChatAdminProps {
     roomId: string;
