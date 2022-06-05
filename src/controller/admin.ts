@@ -1,29 +1,13 @@
 import { validateFields } from "../utils/validateHasProperty";
 import { Request, Response } from "express";
 
-import { insertRoomAdmin, insertChatAdmin, updateChatAdmin,
+import { insertChatAdmin, updateChatAdmin,
         findChatsAdmin, findUsersChat, findAllUsers, 
         deleteChat, deleteUserChat
 } from "../models/M_admin";
 
 export class AdminController {
 // --------------------------------------------CREATE ---------------------------------------
-    // Insert Church
-    async insertRoom(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'name', 'description', 'cpf', 'cnpj', 'users', 'idUser', 'coords');
-
-        responseValidate.map(validate => {
-            if(!validate.exists){
-                return res.json({'Error': `Missing parameter ${validate.field}`});
-            } else if (validate.empty){
-                return res.json({'Error': `Parameter ${validate.field} are empty`});
-            } 
-        });
-
-        const insertRoomResponse = await insertRoomAdmin(req.body);
-
-        return res.json(insertRoomResponse);
-    }
     // Insert Chat in a Church
     async insertChat(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'roomId', 'description', 'name', 'users', 'adminUser');
