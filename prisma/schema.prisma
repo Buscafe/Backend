@@ -101,10 +101,8 @@ model tbl_meeting {
   FK_id_corp       Int?
   meeting_name     String?   @db.VarChar(255)
   meeting_desc     String?   @db.VarChar(255)
-  adress           String?   @db.VarChar(255)
-  meeting_time     DateTime? @db.Time(0)
+  meeting_time     String?   @db.VarChar(19)
   meeting_duration Int?
-  meeting_date     DateTime? @db.Date
   meeting_days     String?   @db.VarChar(255)
   tbl_corp         tbl_corp? @relation(fields: [FK_id_corp], references: [id_corp], onDelete: NoAction, onUpdate: NoAction, map: "FK_meeting_id_corp")
 

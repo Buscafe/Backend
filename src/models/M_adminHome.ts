@@ -27,9 +27,10 @@ interface aboutChurchAdminProps {
 interface meetingChurchAdminProps {
     meetingName: string,
     meetingDescription: string,
-    meetingDays: string,
+    meetingDays: [],
     time: string,
     duration: number,
+    roomId: string,
 }
 interface donateChurchAdminProps {
     keyType: 'CPF' | 'CNPJ' | 'email' | 'celular' | 'chave_aleatoria',
@@ -129,8 +130,64 @@ export async function insertAboutChurchAdmin({ seats, parking, accessibility, sm
 }
 
 // Insert Meeting Church
-export async function insertMeetingChurchAdmin({ meetingName, meetingDescription, meetingDays, time, duration }: meetingChurchAdminProps){
-    
+export async function insertMeetingChurchAdmin({ meetingName, meetingDescription, meetingDays, time, duration, roomId }: meetingChurchAdminProps){
+    try {
+        // Find church for create info about it
+        const church = await prisma.tbl_corp.findUnique({
+            where: {
+                roomId
+            }, select: {
+                id_corp: true, 
+            },
+        })
+        if (!church){
+            return {
+                'code' : 2,
+                'msg' : 'Primeiro se deve cadastrar as informações básicas sobre a Igreja',
+            } 
+        }
+        
+        // formated day
+        let days = ''
+        if(meetingDays.length > 1){
+            meetingDays.map(day => {
+                days += `${day}/`
+              })
+        } else{
+            days += `${meetingDays}/`
+        }
+        let daysFormat = days.slice(0, -1) + ''
+
+        // formated time
+        function pad(t: any) {
+            return t.toString().padStart(2, 0);
+        }
+        let d = new Date(time);
+        const timeFormat= `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+        // Create meeting info 
+        await prisma.tbl_meeting.create({
+            data: {
+                meeting_name: meetingName,
+                meeting_desc: meetingDescription,
+                meeting_days: daysFormat,
+                meeting_time: timeFormat,
+                meeting_duration: Number(duration),
+                FK_id_corp: church.id_corp                
+            },
+        });
+        return {
+            'code' : 1,
+            'msg' : 'Informações sobre o culto cadastrada sucesso!',
+        }
+
+    } catch (error) {
+        console.log(error)
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
 }
 
 // Insert Donate Church
@@ -177,13 +234,11 @@ export async function insertDonateChurchAdmin({ keyType, keyValue, roomId }: don
         }
 
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
         } 
     }
-    
 }
 
 // -------------------------------------------- READ ---------------------------------------
@@ -251,16 +306,65 @@ export async function findAboutChurchAdmin(corpId: number){
 }
 
 // find Meeting Church
-interface findMeetingChurchAdminProps {
+export async function findMeetingChurchAdmin(corpId: number){
+    try {
+        const meetingInfo = await prisma.tbl_meeting.findMany({
+            where: {
+                FK_id_corp: corpId
+            }, select: {
+                meeting_name: true,
+                meeting_desc: true,
+                meeting_time: true,
+                meeting_duration: true, 
+                meeting_days: true
+            },
+        })
+        if (meetingInfo.length === 0){
+            return {
+                'code' : 2,
+                'msg' : 'Nenhuma reunião foi cadastrada. Cadastre uma para visualização de seus fiéis.',
+            } 
+        }
 
-}
-export async function findMeetingChurchAdmin({ }: findMeetingChurchAdminProps){
-    
+        return {
+            'code' : 1,
+            'msg' : meetingInfo,
+        } 
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
 }
 
 // find Donate Church
 export async function findDonateChurchAdmin(corpId: number){
-   
+    try {
+        const donateInfo = await prisma.tbl_donate.findMany({
+            where: {
+                FK_id_corp: corpId
+            }, select: {
+                key_type: true, 
+                donate_key: true
+            },
+        })
+        if (donateInfo.length === 0){
+            return {
+                'code' : 2,
+                'msg' : 'Nenhuma tipo de oferta foi encontrado. O padrão é presencialmente na instituição.',
+            } 
+        }
+        return {
+            'code' : 1,
+            'msg' : donateInfo,
+        } 
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
 }
 
 

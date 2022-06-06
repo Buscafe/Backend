@@ -44,7 +44,7 @@ export class AdminHomeController {
     }
     // Insert Meeting Church
     async insertMeetingChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'meetingName', 'meetingDescription', 'meetingDays', 'time', 'duration');
+        const responseValidate = validateFields(req.body, 'meetingName', 'meetingDescription', 'meetingDays', 'time', 'duration', 'roomId');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -111,7 +111,7 @@ export class AdminHomeController {
     }
     // Insert Meeting Church
     async getMeetingChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.params);
+        const responseValidate = validateFields(req.params, 'corpId');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -121,7 +121,7 @@ export class AdminHomeController {
             } 
         });
 
-        const getMeetingChurchResponse = await findMeetingChurchAdmin(req.params);
+        const getMeetingChurchResponse = await findMeetingChurchAdmin(Number(req.params.corpId));
 
         return res.json(getMeetingChurchResponse);
     }

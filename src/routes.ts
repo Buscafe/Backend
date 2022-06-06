@@ -52,7 +52,7 @@ router.post('/admin/home/donateChurch/insert', adminHome.insertDonateChurch)
 
 router.get('/admin/home/church/:corpId', adminHome.getChurch)
 router.get('/admin/home/aboutChurch/:corpId', adminHome.getAboutChurch)
-router.get('/admin/home/meetingsChurch/:id', adminHome.getMeetingChurch)
+router.get('/admin/home/meetingsChurch/:corpId', adminHome.getMeetingChurch)
 router.get('/admin/home/donateChurch/:corpId', adminHome.getDonateChurch)
 
 router.post('/admin/home/church/update', adminHome.updateChurch)
