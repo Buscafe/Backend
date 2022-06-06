@@ -5,6 +5,7 @@ import { ChurchController } from "./controller/church";
 import { ChatController } from "./controller/chat";
 import { AdminController } from './controller/admin'
 import { AdminHomeController } from "./controller/adminHome";
+import { ProductsController } from "./controller/products";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ const church    = new ChurchController();
 const chat      = new ChatController();
 const admin     = new AdminController();
 const adminHome = new AdminHomeController();
+const products  = new ProductsController();
 
 // Login Routes
 router.post('/login', loginUser.handle);
@@ -63,5 +65,8 @@ router.post('/admin/home/donateChurch/update', adminHome.updateDonateChurch)
 router.delete('/admin/home/meetingsChurch/delete', adminHome.deleteMeetingChurch)
 router.delete('/admin/home/donateChurch/delete', adminHome.deleteDonateChurch)
 
+// Products 
+router.get('/plans', products.getAll)
+router.post('/subscribe', products.subscribe)
 
 export { router };
