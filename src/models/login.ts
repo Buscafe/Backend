@@ -87,7 +87,8 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     id_corp: true,
                     corpName: true,
                     roomId: true,
-                    coordinate: true
+                    coordinate: true,
+                    color: true,
                 }
             });
 
@@ -96,6 +97,8 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     name: church.corpName,
                     roomId: church.roomId,
                     id_corp: church.id_corp,
+                    color: church.color,
+                    
                 };
                 formattedUser.coordinate = {
                     lat: Number(church.coordinate?.split(',')[0]),

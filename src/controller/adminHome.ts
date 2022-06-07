@@ -147,7 +147,7 @@ export class AdminHomeController {
     
     // update Church
     async updateChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'name', 'description', 'cpf', 'cnpj', 'users', 'idUser', 'coords', 'color');
+        const responseValidate = validateFields(req.body, 'roomId', 'id_doc', 'id_corp', 'name', 'description', 'cpf', 'cnpj', 'coords', 'color');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -163,7 +163,7 @@ export class AdminHomeController {
     }
     // update About Church
     async updateAboutChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'seats', 'parking', 'accessibility', 'smartphone', 'email', 'facebook');
+        const responseValidate = validateFields(req.body, 'id_info', 'seats', 'parking', 'accessibility', 'smartphone', 'email', 'facebook');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -179,7 +179,7 @@ export class AdminHomeController {
     }
     // Insert Meeting Church
     async updateMeetingChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'meetingName', 'meetingDescription', 'meetingDays', 'time', 'duration');
+        const responseValidate = validateFields(req.body, 'id_meeting', 'meetingName', 'meetingDescription', 'meetingDays', 'time', 'duration');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -195,7 +195,7 @@ export class AdminHomeController {
     }
     // Insert Donate Church
     async updateDonateChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'keyType', 'keyValue');
+        const responseValidate = validateFields(req.body, 'id_donate', 'keyType', 'keyValue');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -213,8 +213,9 @@ export class AdminHomeController {
     // -------------------------------------------- DELETE ---------------------------------------
 
     // Delete Meeting Church
+    // Delete Meeting Church
     async deleteMeetingChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'meetingName', 'meetingDescription', 'meetingDays', 'time', 'duration');
+        const responseValidate = validateFields(req.params, 'corpId', 'id_meeting');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -224,13 +225,13 @@ export class AdminHomeController {
             } 
         });
 
-        const deleteMeetingChurchResponse = await deleteMeetingChurchAdmin(req.body);
+        const deleteMeetingChurchResponse = await deleteMeetingChurchAdmin(Number(req.params.corpId), Number(req.params.id_meeting));
 
         return res.json(deleteMeetingChurchResponse);
     }
     // Delete Donate Church
     async deleteDonateChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'keyType', 'keyValue');
+        const responseValidate = validateFields(req.params, 'corpId', 'id_donate');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -240,7 +241,7 @@ export class AdminHomeController {
             } 
         });
 
-        const deleteDonateChurchResponse = await deleteDonateChurchAdmin(req.body);
+        const deleteDonateChurchResponse = await deleteDonateChurchAdmin(Number(req.params.corpId), Number(req.params.id_donate));
 
         return res.json(deleteDonateChurchResponse);
     }

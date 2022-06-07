@@ -21,6 +21,7 @@ export interface User {
     church?: {
         name: string,
         roomId: string | null,
-        id_corp: number
+        id_corp: number,
+        color: string | null,
     } | null;
 }
