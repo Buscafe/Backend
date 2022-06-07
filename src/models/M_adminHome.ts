@@ -564,27 +564,20 @@ export async function updateDonateChurchAdmin({ id_donate, keyType, keyValue }: 
 // -------------------------------------------- DELETE ---------------------------------------
 
 // Delete Meeting Church
-export async function deleteMeetingChurchAdmin(id_meeting: number, corpId: number){
+export async function deleteMeetingChurchAdmin(id_meeting: number){
     try {
-        
         const meetingDeleted = await prisma.tbl_meeting.delete({
             where: {
                 id_meeting
             }
         });
-        console.log(meetingDeleted)
-        if (meetingDeleted){
-            return {
-                'code' : 1,
-                'msg'  : 'Reunião removida com sucesso!'
-            }
-        } else {
-            return {
-                'code' : 2,
-                'msg' : 'Houve um erro ao deletar a reunião!'
-            }
+
+        return {
+            'code' : 1,
+            'msg'  : 'Reunião removida com sucesso!'
         }
     } catch (error) {
+        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -593,7 +586,7 @@ export async function deleteMeetingChurchAdmin(id_meeting: number, corpId: numbe
 }
 
 // Delete Donate Church
-export async function deleteDonateChurchAdmin(id_donate: number, corpId: number){
+export async function deleteDonateChurchAdmin(id_donate: number){
     try {
         const donateDeleted = await prisma.tbl_donate.delete({
             where: {
@@ -601,16 +594,9 @@ export async function deleteDonateChurchAdmin(id_donate: number, corpId: number)
             }
         });
         
-        if (donateDeleted){
-            return {
-                'code' : 1,
-                'msg'  : 'Modo de doação removido com sucesso'
-            }
-        } else {
-            return {
-                'code' : 2,
-                'msg' : 'Houve um erro ao excluir o modo de doação'
-            }
+        return {
+            'code' : 1,
+            'msg'  : 'Modo de doação removido com sucesso'
         }
     } catch (error) {
         return {

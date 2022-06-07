@@ -225,7 +225,7 @@ export class AdminHomeController {
             } 
         });
 
-        const deleteMeetingChurchResponse = await deleteMeetingChurchAdmin(Number(req.params.corpId), Number(req.params.id_meeting));
+        const deleteMeetingChurchResponse = await deleteMeetingChurchAdmin(Number(req.params.id_meeting));
 
         return res.json(deleteMeetingChurchResponse);
     }
@@ -241,8 +241,8 @@ export class AdminHomeController {
             } 
         });
 
-        const deleteDonateChurchResponse = await deleteDonateChurchAdmin(Number(req.params.corpId), Number(req.params.id_donate));
-
+        const deleteDonateChurchResponse = await deleteDonateChurchAdmin(Number(req.params.id_donate));
+        console.log(deleteDonateChurchAdmin)
         return res.json(deleteDonateChurchResponse);
     }
 }

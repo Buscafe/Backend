@@ -62,8 +62,8 @@ router.post('/admin/home/aboutChurch/update', adminHome.updateAboutChurch)
 router.post('/admin/home/meetingsChurch/update', adminHome.updateMeetingChurch)
 router.post('/admin/home/donateChurch/update', adminHome.updateDonateChurch)
 
-router.delete('/admin/home/meetingsChurch/delete/:corpId/:id_meeting', adminHome.deleteMeetingChurch)
-router.delete('/admin/home/donateChurch/delete/:corpId/:id_donate', adminHome.deleteDonateChurch)
+router.delete('/admin/home/meetingsChurch/delete/:id_meeting', adminHome.deleteMeetingChurch)
+router.delete('/admin/home/donateChurch/delete/:id_donate', adminHome.deleteDonateChurch)
 
 // Products 
 router.get('/plans', products.getAll)
