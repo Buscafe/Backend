@@ -204,7 +204,6 @@ export class AdminHomeController {
                 return res.json({'Error': `Parameter ${validate.field} are empty`});
             } 
         });
-
         const updateAboutChurchResponse = await updateAboutChurchAdmin(req.body);
 
         return res.json(updateAboutChurchResponse);

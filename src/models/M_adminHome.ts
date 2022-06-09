@@ -479,7 +479,6 @@ interface updateChurchAdminProps {
     
 }
 export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, description, cpf, cnpj, coords, color }: updateChurchAdminProps){
-    console.log(coords)
     try{
         // Insert in mongo for we setting rooms and chats
         const updateRooms = await rooms.updateOne(                
@@ -498,7 +497,6 @@ export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, descrip
         await prisma.tbl_corp.update({
             where: {
                 id_corp, 
-                roomId
             },
             data: {
                 corpName: name,
@@ -525,7 +523,6 @@ export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, descrip
         } 
     }
 }
-
 // Update About Church
 interface updateAboutChurchAdminProps {
     id_info: number,
@@ -558,6 +555,7 @@ export async function updateAboutChurchAdmin({ id_info, seats, parking, accessib
         }
 
     } catch (error) {
+        console.log(error)
         return {
             'status' : 'error',
             'err' : error
