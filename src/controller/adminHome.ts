@@ -2,10 +2,10 @@ import { validateFields } from "../utils/validateHasProperty";
 import { Request, Response } from "express";
 
 import { 
-    insertChurchAdmin, insertAboutChurchAdmin, insertMeetingChurchAdmin, insertDonateChurchAdmin,
-    updateChurchAdmin, updateAboutChurchAdmin, updateMeetingChurchAdmin, updateDonateChurchAdmin,
-    deleteMeetingChurchAdmin, deleteDonateChurchAdmin,
-    findChurchAdmin, findAboutChurchAdmin, findMeetingChurchAdmin, findDonateChurchAdmin,
+    insertChurchAdmin, insertAboutChurchAdmin, insertMeetingChurchAdmin, insertEventAdmin, insertDonateChurchAdmin,
+    findChurchAdmin, findAboutChurchAdmin, findMeetingChurchAdmin, findEventsChurchAdmin, findDonateChurchAdmin,
+    updateChurchAdmin, updateAboutChurchAdmin,
+    deleteMeetingChurchAdmin, deleteEventChurchAdmin, deleteDonateChurchAdmin,
 } from "../models/M_adminHome"
 
 
@@ -58,6 +58,22 @@ export class AdminHomeController {
 
         return res.json(insertMeetingChurchResponse);
     }
+    // Insert Event
+    async insertEvent(req: Request, res: Response){
+        const responseValidate = validateFields(req.body, 'title', 'event_desc', 'event_duration', 'event_date', 'coords', 'FK_id_corp');
+
+        responseValidate.map(validate => {
+            if(!validate.exists){
+                return res.json({'Error': `Missing parameter ${validate.field}`});
+            } else if (validate.empty){
+                return res.json({'Error': `Parameter ${validate.field} are empty`});
+            } 
+        });
+
+        const insertEventResponse = await insertEventAdmin(req.body);
+
+        return res.json(insertEventResponse);
+    }
     // Insert Donate Church
     async insertDonateChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'keyType', 'keyValue', 'roomId');
@@ -77,7 +93,7 @@ export class AdminHomeController {
 
     // -------------------------------------------- READ ---------------------------------------
 
-    // Insert Church
+    // Find Church
     async getChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'corpId');
 
@@ -93,7 +109,7 @@ export class AdminHomeController {
 
         return res.json(getChurchResponse);
     }
-    // Insert About Church
+    // Find About Church
     async getAboutChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'corpId');
 
@@ -109,7 +125,7 @@ export class AdminHomeController {
 
         return res.json(getAboutChurchResponse);
     }
-    // Insert Meeting Church
+    // Find Meeting Church
     async getMeetingChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'corpId');
 
@@ -125,7 +141,23 @@ export class AdminHomeController {
 
         return res.json(getMeetingChurchResponse);
     }
-    // Insert Donate Church
+    // Find Events Church
+    async getEventsChurch(req: Request, res: Response){
+        const responseValidate = validateFields(req.params, 'corpId');
+
+        responseValidate.map(validate => {
+            if(!validate.exists){
+                return res.json({'Error': `Missing parameter ${validate.field}`});
+            } else if (validate.empty){
+                return res.json({'Error': `Parameter ${validate.field} are empty`});
+            } 
+        });
+
+        const getEventsChurchResponse = await findEventsChurchAdmin(Number(req.params.corpId));
+
+        return res.json(getEventsChurchResponse);
+    }
+    // Find Donate Church
     async getDonateChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.params, 'corpId');
 
@@ -177,45 +209,12 @@ export class AdminHomeController {
 
         return res.json(updateAboutChurchResponse);
     }
-    // Insert Meeting Church
-    async updateMeetingChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'id_meeting', 'meetingName', 'meetingDescription', 'meetingDays', 'time', 'duration');
-
-        responseValidate.map(validate => {
-            if(!validate.exists){
-                return res.json({'Error': `Missing parameter ${validate.field}`});
-            } else if (validate.empty){
-                return res.json({'Error': `Parameter ${validate.field} are empty`});
-            } 
-        });
-
-        const updateMeetingChurchResponse = await updateMeetingChurchAdmin(req.body);
-
-        return res.json(updateMeetingChurchResponse);
-    }
-    // Insert Donate Church
-    async updateDonateChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'id_donate', 'keyType', 'keyValue');
-
-        responseValidate.map(validate => {
-            if(!validate.exists){
-                return res.json({'Error': `Missing parameter ${validate.field}`});
-            } else if (validate.empty){
-                return res.json({'Error': `Parameter ${validate.field} are empty`});
-            } 
-        });
-
-        const updateDonateChurchResponse = await updateDonateChurchAdmin(req.body);
-
-        return res.json(updateDonateChurchResponse);
-    }
-
+   
     // -------------------------------------------- DELETE ---------------------------------------
 
     // Delete Meeting Church
-    // Delete Meeting Church
     async deleteMeetingChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.params, 'corpId', 'id_meeting');
+        const responseValidate = validateFields(req.params, 'id_meeting');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -230,8 +229,24 @@ export class AdminHomeController {
         return res.json(deleteMeetingChurchResponse);
     }
     // Delete Donate Church
+    async deleteEventChurch(req: Request, res: Response){
+        const responseValidate = validateFields(req.params, 'id_event');
+
+        responseValidate.map(validate => {
+            if(!validate.exists){
+                return res.json({'Error': `Missing parameter ${validate.field}`});
+            } else if (validate.empty){
+                return res.json({'Error': `Parameter ${validate.field} are empty`});
+            } 
+        });
+
+        const deleteEventChurchResponse = await deleteEventChurchAdmin(Number(req.params.id_event));
+        return res.json(deleteEventChurchResponse);
+    }
+    
+    // Delete Donate Church
     async deleteDonateChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.params, 'corpId', 'id_donate');
+        const responseValidate = validateFields(req.params, 'id_donate');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -242,7 +257,6 @@ export class AdminHomeController {
         });
 
         const deleteDonateChurchResponse = await deleteDonateChurchAdmin(Number(req.params.id_donate));
-        console.log(deleteDonateChurchAdmin)
         return res.json(deleteDonateChurchResponse);
     }
 }

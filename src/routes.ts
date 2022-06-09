@@ -50,19 +50,20 @@ router.delete('/admin/delete/userChat/:_id/:idUser', admin.removeUserChat);
 router.post('/admin/home/church/insert', adminHome.insertChurch)
 router.post('/admin/home/aboutChurch/insert', adminHome.insertAboutChurch)
 router.post('/admin/home/meetingsChurch/insert', adminHome.insertMeetingChurch)
+router.post('/admin/home/events/insert', adminHome.insertEvent)
 router.post('/admin/home/donateChurch/insert', adminHome.insertDonateChurch)
 
 router.get('/admin/home/church/:corpId', adminHome.getChurch)
 router.get('/admin/home/aboutChurch/:corpId', adminHome.getAboutChurch)
 router.get('/admin/home/meetingsChurch/:corpId', adminHome.getMeetingChurch)
+router.get('/admin/home/eventsChurch/:corpId', adminHome.getEventsChurch)
 router.get('/admin/home/donateChurch/:corpId', adminHome.getDonateChurch)
 
 router.post('/admin/home/church/update', adminHome.updateChurch)
 router.post('/admin/home/aboutChurch/update', adminHome.updateAboutChurch)
-router.post('/admin/home/meetingsChurch/update', adminHome.updateMeetingChurch)
-router.post('/admin/home/donateChurch/update', adminHome.updateDonateChurch)
 
 router.delete('/admin/home/meetingsChurch/delete/:id_meeting', adminHome.deleteMeetingChurch)
+router.delete('/admin/home/eventChurch/delete/:id_event', adminHome.deleteEventChurch)
 router.delete('/admin/home/donateChurch/delete/:id_donate', adminHome.deleteDonateChurch)
 
 // Products 

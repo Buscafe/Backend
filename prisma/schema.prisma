@@ -19,6 +19,7 @@ model tbl_corp {
   tbl_doc      tbl_doc?       @relation(fields: [FK_id_doc], references: [id_doc], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_doc")
   tbl_user     tbl_user?      @relation(fields: [FK_id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_user")
   tbl_donate   tbl_donate[]
+  tbl_events   tbl_events[]
   tbl_info     tbl_info?
   tbl_meeting  tbl_meeting[]
   tbl_relation tbl_relation[]
@@ -107,6 +108,19 @@ model tbl_meeting {
   tbl_corp         tbl_corp? @relation(fields: [FK_id_corp], references: [id_corp], onDelete: NoAction, onUpdate: NoAction, map: "FK_meeting_id_corp")
 
   @@index([FK_id_corp], map: "FK_meeting_id_corp")
+}
+
+model tbl_events {
+  id_event         Int       @id @default(autoincrement())
+  FK_id_corp       Int?
+  title            String?   @db.VarChar(255)
+  event_desc       String?   @db.VarChar(255)
+  event_duration   Int?
+  event_date       String?   @db.VarChar(19)
+  event_coordenate String?   @db.VarChar(150)
+  tbl_corp         tbl_corp? @relation(fields: [FK_id_corp], references: [id_corp], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_event_corp")
+
+  @@index([FK_id_corp], map: "FK_id_event_corp")
 }
 
 enum tbl_donate_key_type {
