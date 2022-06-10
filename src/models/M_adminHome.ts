@@ -324,6 +324,11 @@ export async function findChurchAdmin(corpId: number){
                     select: {
                         id_doc: true
                     }
+                },
+                tbl_user: {
+                    select:{
+                        localization: true
+                    }
                 }
             },
         })
@@ -396,7 +401,7 @@ export async function findMeetingChurchAdmin(corpId: number){
         if (meetingInfo.length === 0){
             return {
                 'code' : 2,
-                'msg' : 'Nenhuma reunião foi cadastrada. Cadastre uma para visualização de seus fiéis.',
+                'msg' : 'Nenhuma reunião foi cadastrada.',
             } 
         }
 
@@ -430,7 +435,7 @@ export async function findEventsChurchAdmin(corpId: number){
         if (eventsInfo.length === 0){
             return {
                 'code' : 2,
-                'msg' : 'Nenhuma reunião foi cadastrada. Cadastre uma para visualização de seus fiéis.',
+                'msg' : 'Nenhum evento foi cadastrado.',
             } 
         }
 
