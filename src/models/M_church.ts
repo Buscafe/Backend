@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { chats } from '../services/chats';
 
 const prisma = new PrismaClient();
 
@@ -96,12 +97,6 @@ interface joinChurchProps{
     roomId: string,
 }
 export async function joinChurch({ id_user, username, id_church, roomId}: joinChurchProps){
-    const hadAffiliated = await prisma.tbl_relation.findFirst({
-        where: {
-            FK_id_user: id_user,
-            FK_id_corp: id_church
-        }
-    })
     try {
         const affiliate = await prisma.tbl_relation.create({
             data: {
@@ -113,12 +108,21 @@ export async function joinChurch({ id_user, username, id_church, roomId}: joinCh
         const affiliateRoom = await rooms.updateOne(
             {"_id": roomId},
             {$push : {
-                    "users": {
-                            "idUser": id_user,
-                            "name":  username
-                    }
+                "users": {
+                        "idUser": id_user,
+                        "name":  username
+                }
             }
-        })        
+        })  
+        const joinMainChat = await chats.updateOne(
+            {"_id": roomId},
+            {$push : {
+                "users": {
+                        "idUser": id_user,
+                        "name":  username
+                }
+            }
+        })       
         if(affiliate && affiliateRoom){
             return {
                 'code': 1,

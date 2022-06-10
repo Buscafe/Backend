@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { rooms } from '../services/rooms';
 import { cpf, cnpj } from 'cpf-cnpj-validator'; 
+import { chats } from '../services/chats';
 
 const prisma = new PrismaClient();
 
@@ -14,22 +15,38 @@ interface insertChurchAdminProps {
     cnpj: string,
     users: { idUser: number, name: string }[],
     idUser: number,
+    username: string,
     coords: {lat: number, lng: number},
     color: string,
 }
-export async function insertChurchAdmin({ name, description, cpf, cnpj, users, idUser, coords, color }: insertChurchAdminProps){
+export async function insertChurchAdmin({ name, description, cpf, cnpj, users, idUser, username, coords, color }: insertChurchAdminProps){
     try {
         // Insert in mongo for we setting rooms and chats
         const insertRooms = await rooms.insertMany({
             'name': name, 
             'users': users
         })
+
+        const id = insertRooms[0]._id.toString().split('"')[0] // Removing Object id notation and saving only the id  
+
+        const churchMainChat = await chats.insertMany({
+            "roomId": id,
+            "name": "Grupo Geral",
+            "dexcription": "Grupo Principal da instituição, onde todos os membros se encontrarão!",
+            "users": [
+                {
+                        "idUser" : idUser,
+                        "name": username			
+                }
+            ],
+            "adminUser": {idUser: idUser, name: username}
+        })
         // Insert first documents for we have a FK_id_doc
         const insertDoc = await prisma.tbl_doc.create({
             data: { cpf, cnpj},
         })
 
-        const id = insertRooms[0]._id.toString().split('"')[0] // Removing Object id notation and saving only the id  
+        
         await prisma.tbl_corp.create({
             data: {
                 FK_id_user: idUser,
@@ -48,6 +65,7 @@ export async function insertChurchAdmin({ name, description, cpf, cnpj, users, i
                 id_corp: true,
             }
         });
+
         const formattedChurch = {
             "color": color,
             "id_corp": church?.id_corp,
