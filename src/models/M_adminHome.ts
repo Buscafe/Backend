@@ -27,7 +27,7 @@ export async function insertChurchAdmin({ name, description, cpf, cnpj, users, i
             'users': users
         })
 
-        const id = insertRooms[0]._id.toString().split('"')[0] // Removing Object id notation and saving only the id  
+        const id = insertRooms[0]._id.toString().split('"')[0] // Removing Object id notation and saving only the id
 
         const churchMainChat = await chats.insertMany({
             "roomId": id,
@@ -91,12 +91,12 @@ interface insertAboutChurchAdminProps {
     seats: number,
     parking: boolean,
     accessibility: boolean,
-    smartphone: string,
+    cellphone: string,
     email: string,
     facebook: string,
     roomId: string,
 }
-export async function insertAboutChurchAdmin({ seats, parking, accessibility, smartphone, email, facebook, roomId }: insertAboutChurchAdminProps){
+export async function insertAboutChurchAdmin({ seats, parking, accessibility, cellphone, email, facebook, roomId }: insertAboutChurchAdminProps){
     try {
         // Find church for create info about it
         const church = await prisma.tbl_corp.findUnique({
@@ -119,7 +119,7 @@ export async function insertAboutChurchAdmin({ seats, parking, accessibility, sm
                 seats: Number(seats),
                 parking,
                 accessibility,
-                cellphone: smartphone,
+                cellphone: cellphone,
                 email,
                 link: facebook,
                 FK_id_corp: church.id_corp                
@@ -199,7 +199,6 @@ export async function insertMeetingChurchAdmin({ meetingName, meetingDescription
         }
 
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -237,14 +236,12 @@ export async function insertEventAdmin({ title, event_desc, event_duration, even
                 FK_id_corp,    
             },
         });
-        console.log(timeFormat)   
         return {
             'code' : 1,
             'msg' : 'Informações sobre o evento cadastradas com sucesso!',
         }
 
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -374,7 +371,6 @@ export async function findAboutChurchAdmin(corpId: number){
             'msg' : aboutInfo,
         } 
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -504,7 +500,6 @@ export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, descrip
             {$set: {
                 'name': name,
             }})
-        
         const updateDoc = await prisma.tbl_doc.update({
             where:{
                 id_doc
@@ -523,18 +518,19 @@ export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, descrip
                 color,
             },
         });
-
         const formattedChurch = {
             "color": color,
+            "id_corp": id_corp,
             "name": name,
+            "roomId": roomId,
         }
+
         return {
             'code' : 1,
             'msg' : 'Instituição atualizada com sucesso!',
             'room': formattedChurch
         }
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -547,11 +543,11 @@ interface updateAboutChurchAdminProps {
     seats: number,
     parking: boolean,
     accessibility: boolean,
-    smartphone: string,
+    cellphone: string,
     email: string,
     facebook: string,
 }
-export async function updateAboutChurchAdmin({ id_info, seats, parking, accessibility, smartphone, email, facebook }: updateAboutChurchAdminProps){
+export async function updateAboutChurchAdmin({ id_info, seats, parking, accessibility, cellphone, email, facebook }: updateAboutChurchAdminProps){
     try {
          // Create info
         await prisma.tbl_info.update({
@@ -562,7 +558,7 @@ export async function updateAboutChurchAdmin({ id_info, seats, parking, accessib
                 seats: Number(seats),
                 parking,
                 accessibility,
-                cellphone: smartphone,
+                cellphone,
                 email,
                 link: facebook,               
             },
@@ -573,7 +569,6 @@ export async function updateAboutChurchAdmin({ id_info, seats, parking, accessib
         }
 
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -607,7 +602,6 @@ export async function deleteMeetingChurchAdmin(id_meeting: number){
             'msg'  : 'Reunião removida com sucesso!'
         }
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error
@@ -629,7 +623,6 @@ export async function deleteEventChurchAdmin(id_event: number){
             'msg'  : 'Evento removido com sucesso'
         }
     } catch (error) {
-        console.log(error)
         return {
             'status' : 'error',
             'err' : error

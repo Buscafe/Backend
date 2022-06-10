@@ -30,7 +30,7 @@ export class AdminHomeController {
     }
     // Insert About Church
     async insertAboutChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'seats', 'parking', 'accessibility', 'smartphone', 'email', 'facebook', 'roomId');
+        const responseValidate = validateFields(req.body, 'seats', 'parking', 'accessibility', 'cellphone', 'email', 'facebook', 'roomId');
         responseValidate.map(validate => {
             if(!validate.exists){
                 return res.json({'Error': `Missing parameter ${validate.field}`});
@@ -195,7 +195,7 @@ export class AdminHomeController {
     }
     // update About Church
     async updateAboutChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'id_info', 'seats', 'parking', 'accessibility', 'smartphone', 'email', 'facebook');
+        const responseValidate = validateFields(req.body, 'id_info', 'seats', 'parking', 'accessibility', 'cellphone', 'email', 'facebook');
 
         responseValidate.map(validate => {
             if(!validate.exists){
