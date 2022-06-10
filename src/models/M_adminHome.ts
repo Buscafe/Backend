@@ -447,7 +447,7 @@ export async function findDonateChurchAdmin(corpId: number){
         if (donateInfo.length === 0){
             return {
                 'code' : 2,
-                'msg' : 'Nenhuma tipo de oferta foi encontrado. O padrão é presencialmente na instituição.',
+                'msg' : 'Nenhuma tipo de oferta foi encontrado.',
             } 
         }
         return {
