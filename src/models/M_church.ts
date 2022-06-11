@@ -86,10 +86,66 @@ export async function findAllChurches(religion: string, idUser: number){
 
         return data;
     } catch (err) {
-        console.log(err)
         return {
             'code': 1,
             'msg' : 'Nenhuma igreja cadastrada na religião determinada',
+            'err' : err 
+        }
+    }
+}
+
+interface formattedEventsProps{
+    "id_event": number,
+    "title": string | null,
+    "event_desc":string | null,
+    "event_duration": number | null,
+    "event_date": string | null,
+    "event_coordenate": {
+        lat: number,
+        lng: number,
+    },
+}
+
+export async function findAllEvents(religion: string, idUser: number){
+    try {
+        const allEvents = await prisma.tbl_events.findMany({
+            where: {
+                tbl_corp: {
+                    tbl_user:{
+                        religion: religion
+                    }
+                }
+            },
+            select: {
+                id_event: true, 
+                title: true,
+                event_desc: true, 
+                event_duration: true, 
+                event_date: true, 
+                event_coordenate: true,
+            }
+        });
+
+        const formattedEvents: formattedEventsProps[] = allEvents.map((event) => {     
+            return {
+                "id_event": event.id_event,
+                "title": event.title,
+                "event_desc": event.event_desc,
+                "event_duration": event.event_duration,
+                "event_date": event.event_date,
+                "event_coordenate": {
+                    "lat": Number(event.event_coordenate?.split(',')[0].trim()),
+                    "lng": Number(event.event_coordenate?.split(',')[1].trim())
+                },
+            }
+        });
+
+        return formattedEvents;
+
+    } catch (err) {
+        return {
+            'code': 1,
+            'msg' : 'Nenhum Evento cadastrado na religião determinada',
             'err' : err 
         }
     }

@@ -33,6 +33,7 @@ router.post('/social/delete/message/:chatId/:_id', chat.removeMessage);
 
 // Churches routes
 router.get('/allChurches/:idUser/:religion', church.getAll)
+router.get('/allEvents/:idUser/:religion', church.getAllEvents)
 router.post('/affiliate', church.joinChurch)
 
 // Admin routes
