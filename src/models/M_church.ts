@@ -16,8 +16,8 @@ interface formattedChurchesProps{
         corpName: string,
         corpDesc: string,
         localization: {
-            "estado": string,
-            "cidade": string,
+            "estado": string | undefined,
+            "cidade": string | undefined,
         },
         roomId: string | null,
 }
@@ -31,23 +31,25 @@ interface formattedRelationsProps{
 
 export async function findAllChurches(religion: string, idUser: number){
     try {
-        const allChurches = await prisma.tbl_user.findMany({
+        const allChurches = await prisma.tbl_corp.findMany({
             where: {
-                religion,
-                type: '2'
+                tbl_user: {
+                    religion: religion,
+                }
             },
             select: {
-                tbl_corp: {
+                id_corp: true,
+                coordinate: true,
+                corpName: true,
+                corpDesc: true,
+                roomId: true,
+                color: true,
+                tbl_user : {
                     select: {
-                        id_corp: true,
-                        coordinate: true,
-                        corpName: true,
-                        corpDesc: true,
-                        roomId: true,
-                    },
-                },
-                localization: true,
-            },
+                        localization: true,
+                    }
+                }
+            }, 
         });
         const allRelations = await prisma.tbl_relation.findMany({
             where:{
@@ -58,21 +60,23 @@ export async function findAllChurches(religion: string, idUser: number){
                 FK_id_user: true,
             } 
         })
+        // ARRUMAR
         
-        const formattedChurches: formattedChurchesProps[] = allChurches.map((church) => {
+        const formattedChurches: formattedChurchesProps[] = allChurches.map((church) => {     
             return {
-                "id_corp": church.tbl_corp[0].id_corp,
+                "id_corp": church.id_corp,
                 "coordinate": {
-                    "lat": Number(church.tbl_corp[0].coordinate.split(',')[0].trim()),
-                    "lng": Number(church.tbl_corp[0].coordinate.split(',')[1].trim())
+                    "lat": Number(church.coordinate.split(',')[0].trim()),
+                    "lng": Number(church.coordinate.split(',')[1].trim())
                 },
-                "corpName": church.tbl_corp[0].corpName,
-                "corpDesc": church.tbl_corp[0].corpDesc,
+                "corpName": church.corpName,
+                "corpDesc": church.corpDesc,
                 "localization":{
-                    "estado": church.localization.split('/')[0].trim(),
-                    "cidade": church.localization.split('/')[1].trim()
+                    "estado": church.tbl_user?.localization.split('/')[0].trim(),
+                    "cidade": church.tbl_user?.localization.split('/')[1].trim() 
                 },
-                "roomId": church.tbl_corp[0].roomId
+                "roomId": church.roomId,
+                "color": church.color
             }
         });
         const data: formattedRelationsProps = {
@@ -82,6 +86,7 @@ export async function findAllChurches(religion: string, idUser: number){
 
         return data;
     } catch (err) {
+        console.log(err)
         return {
             'code': 1,
             'msg' : 'Nenhuma igreja cadastrada na religião determinada',
