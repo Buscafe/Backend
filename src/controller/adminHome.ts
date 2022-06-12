@@ -193,6 +193,7 @@ export class AdminHomeController {
 
         return res.json(updateChurchResponse);
     }
+
     // update About Church
     async updateAboutChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'id_info', 'seats', 'parking', 'accessibility', 'cellphone', 'email', 'facebook');

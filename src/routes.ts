@@ -44,7 +44,7 @@ router.get('/admin/allChats/:roomId', admin.getChats);
 router.get('/admin/allUsers/:_id/:userId', admin.getAllUsers);
 router.get('/admin/allUsersChat/:roomId/:_id', admin.getAllUsersChat);
 
-router.delete('/admin/delete/chat/:_id', admin.removeChat);
+router.delete('/admin/delete/chat/:_id/:name', admin.removeChat);
 router.delete('/admin/delete/userChat/:_id/:idUser', admin.removeUserChat);
 
 // Admin home routes

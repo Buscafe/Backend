@@ -36,6 +36,7 @@ export async function findChats(id_user: number, roomId: String){
                 $elemMatch: { "idUser": id_user }
             }
         });
+        console.log(allChats)
         return allChats;
     } catch (error) {
         return {

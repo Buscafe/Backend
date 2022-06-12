@@ -97,7 +97,7 @@ export class AdminController {
     // --------------------------------------------DELETE ---------------------------------------
     // Delete a chat in a church
     async removeChat(req: Request, res: Response){
-        const responseValidate = validateFields(req.params, '_id');
+        const responseValidate = validateFields(req.params, '_id', 'name');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -107,7 +107,7 @@ export class AdminController {
             } 
         });
         
-        const removeChatResponse = await deleteChat(req.params._id);
+        const removeChatResponse = await deleteChat(req.params._id, req.params.name);
 
         return res.json(removeChatResponse);
     }

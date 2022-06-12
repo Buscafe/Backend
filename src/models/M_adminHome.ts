@@ -30,7 +30,7 @@ export async function insertChurchAdmin({ name, description, cpf, cnpj, users, i
         const id = insertRooms[0]._id.toString().split('"')[0] // Removing Object id notation and saving only the id
 
         const churchMainChat = await chats.insertMany({
-            "roomId": id,
+            "roomId": insertRooms[0]._id,
             "name": "Grupo Geral",
             "dexcription": "Grupo Principal da instituição, onde todos os membros se encontrarão!",
             "users": [

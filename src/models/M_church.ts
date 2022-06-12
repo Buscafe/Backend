@@ -123,11 +123,13 @@ export async function findAllEvents(religion: string, idUser: number){
                 event_duration: true, 
                 event_date: true, 
                 event_coordenate: true,
+                FK_id_corp: true
             }
         });
 
         const formattedEvents: formattedEventsProps[] = allEvents.map((event) => {     
             return {
+                "FK_id_corp": event.FK_id_corp,
                 "id_event": event.id_event,
                 "title": event.title,
                 "event_desc": event.event_desc,
@@ -141,11 +143,10 @@ export async function findAllEvents(religion: string, idUser: number){
         });
 
         return formattedEvents;
-
     } catch (err) {
         return {
             'code': 1,
-            'msg' : 'Nenhum Evento cadastrado na religião determinada',
+            'msg' : 'Nenhum Evento cadastrado na religiÃ£o determinada',
             'err' : err 
         }
     }
@@ -176,14 +177,15 @@ export async function joinChurch({ id_user, username, id_church, roomId}: joinCh
             }
         })  
         const joinMainChat = await chats.updateOne(
-            {"_id": roomId},
+            {"roomId": roomId},
             {$push : {
                 "users": {
                         "idUser": id_user,
                         "name":  username
                 }
             }
-        })       
+        })   
+        console.log(joinMainChat)    
         if(affiliate && affiliateRoom){
             return {
                 'code': 1,
