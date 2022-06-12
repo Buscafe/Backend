@@ -1,7 +1,7 @@
 import { validateFields } from "../utils/validateHasProperty";
 import { Request, Response } from "express";
 
-import { findRooms, findChats } from '../models/M_chat'
+import { findRooms, findChats, deleteMessage } from '../models/M_chat'
 
 
 export class ChatController {
@@ -36,4 +36,21 @@ export class ChatController {
 
         return res.json(getRoomsResponse);
     }
+
+    async removeMessage(req: Request, res: Response){
+        const responseValidate = validateFields(req.params, '_id', 'chatId');
+
+        responseValidate.map(validate => {
+            if(!validate.exists){
+                return res.json({'Error': `Missing parameter ${validate.field}`});
+            } else if (validate.empty){
+                return res.json({'Error': `Parameter ${validate.field} are empty`});
+            } 
+        });
+        
+        const removeMessageResponse = await deleteMessage(req.params._id, req.params.chatId);
+
+        return res.json(removeMessageResponse);
+    }
+
 }

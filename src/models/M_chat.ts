@@ -2,6 +2,8 @@ import { rooms } from '../services/rooms'
 import { chats } from '../services/chats';
 import { messages } from '../services/messages'
 
+import { Message } from '../types/webSocketTypes'
+
 export async function findRooms(id_user: number){
     try {
         const allRooms = await rooms.find({
@@ -43,10 +45,9 @@ export async function findChats(id_user: number, roomId: String){
     }
 }
 
-export async function getAllMenssages(chatId: number){
+export async function getAllMenssages(chatId: string){
     try {
         const allMenssages = await messages.find({ chatId })
-
         if (!allMenssages.length){
             return {
                 'code': 2,
@@ -63,24 +64,39 @@ export async function getAllMenssages(chatId: number){
     }
 }
 
-export async function insertMessage(chatId: number, value: String, senderId: String,sender: String){
+export async function insertMessage(message: Message){
     try {
-        const message = await messages.insertMany({
-            "chatId": chatId,
-            "value": value,
-            "senderId": senderId,
-            "sender": sender
-        })
-        if (message){
+        const insertMessage = await messages.insertMany(message)
+
+        if (insertMessage){
             return {
                 "code": 1,
-                "message": message[0]
+                "message": insertMessage[0]
             }
         }else{
             return {
                 "code": 2
             }
         }
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        } 
+    }
+}
+export async function deleteMessage(_id: String, chatId: String){
+    try {
+        const messageDeleted = await messages.updateOne(
+            {'_id': _id},
+            {$set: {
+                'value': 'Mensagem apagada...',
+                'status': 'deleteMensagem'
+            }}
+        )
+        const allMenssages = await messages.find({ chatId })
+
+        return allMenssages
     } catch (error) {
         return {
             'status' : 'error',

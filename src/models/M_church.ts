@@ -1,45 +1,90 @@
 import { PrismaClient } from '@prisma/client';
+import { chats } from '../services/chats';
 
 const prisma = new PrismaClient();
 
-export async function findAllChurches(religion: string){
+// Mongo Collections 
+import { rooms } from '../services/rooms';
+
+
+interface formattedChurchesProps{
+        id_corp: number,
+        coordinate: {
+            lat: number,
+            lng: number,
+        },
+        corpName: string,
+        corpDesc: string,
+        localization: {
+            "estado": string | undefined,
+            "cidade": string | undefined,
+        },
+        roomId: string | null,
+}
+interface formattedRelationsProps{
+    relations: {
+        FK_id_corp: number | null,
+        FK_id_user: number | null,
+    }[],
+    churches: formattedChurchesProps[]
+}
+
+export async function findAllChurches(religion: string, idUser: number){
     try {
-        const allChurches = await prisma.tbl_user.findMany({
+        const allChurches = await prisma.tbl_corp.findMany({
             where: {
-                religion,
-                type: '2'
+                tbl_user: {
+                    religion: religion,
+                }
             },
             select: {
-                tbl_corp: {
+                id_corp: true,
+                coordinate: true,
+                corpName: true,
+                corpDesc: true,
+                roomId: true,
+                color: true,
+                tbl_user : {
                     select: {
-                        id_corp: true,
-                        coordinate: true,
-                        corpName: true,
-                        corpDesc: true
+                        localization: true,
                     }
-                },
-                localization: true
-            }
-        });
-
-
-        const formattedChurches = allChurches.map((church) => {
-            return {
-                "id_corp": church.tbl_corp[0].id_corp,
-                "coordinate": {
-                    "lat": Number(church.tbl_corp[0].coordinate.split(',')[0].trim()),
-                    "lng": Number(church.tbl_corp[0].coordinate.split(',')[1].trim())
-                },
-                "corpName": church.tbl_corp[0].corpName,
-                "corpDesc": church.tbl_corp[0].corpDesc,
-                "localization":{
-                    "estado": church.localization.split('/')[0].trim(),
-                    "cidade": church.localization.split('/')[1].trim()
                 }
+            }, 
+        });
+        const allRelations = await prisma.tbl_relation.findMany({
+            where:{
+                FK_id_user: idUser
+            },
+            select: {
+                FK_id_corp: true,
+                FK_id_user: true,
+            } 
+        })
+        // ARRUMAR
+        
+        const formattedChurches: formattedChurchesProps[] = allChurches.map((church) => {     
+            return {
+                "id_corp": church.id_corp,
+                "coordinate": {
+                    "lat": Number(church.coordinate.split(',')[0].trim()),
+                    "lng": Number(church.coordinate.split(',')[1].trim())
+                },
+                "corpName": church.corpName,
+                "corpDesc": church.corpDesc,
+                "localization":{
+                    "estado": church.tbl_user?.localization.split('/')[0].trim(),
+                    "cidade": church.tbl_user?.localization.split('/')[1].trim() 
+                },
+                "roomId": church.roomId,
+                "color": church.color
             }
         });
+        const data: formattedRelationsProps = {
+            relations: allRelations,
+            churches: formattedChurches
+        } 
 
-        return formattedChurches;
+        return data;
     } catch (err) {
         return {
             'code': 1,
@@ -49,25 +94,70 @@ export async function findAllChurches(religion: string){
     }
 }
 
-interface joinChurchProps{
-    id_user: number,
-    id_church: number
+interface formattedEventsProps{
+    "id_event": number,
+    "title": string | null,
+    "event_desc":string | null,
+    "event_duration": number | null,
+    "event_date": string | null,
+    "event_coordenate": {
+        lat: number,
+        lng: number,
+    },
 }
-export async function joinChurch({ id_user, id_church }: joinChurchProps){
-    const hadAffiliated = await prisma.tbl_relation.findFirst({
-        where: {
-            FK_id_user: id_user,
-            FK_id_corp: id_church
-        }
-    })
 
-    if(hadAffiliated){
+export async function findAllEvents(religion: string, idUser: number){
+    try {
+        const allEvents = await prisma.tbl_events.findMany({
+            where: {
+                tbl_corp: {
+                    tbl_user:{
+                        religion: religion
+                    }
+                }
+            },
+            select: {
+                id_event: true, 
+                title: true,
+                event_desc: true, 
+                event_duration: true, 
+                event_date: true, 
+                event_coordenate: true,
+            }
+        });
+
+        const formattedEvents: formattedEventsProps[] = allEvents.map((event) => {     
+            return {
+                "id_event": event.id_event,
+                "title": event.title,
+                "event_desc": event.event_desc,
+                "event_duration": event.event_duration,
+                "event_date": event.event_date,
+                "event_coordenate": {
+                    "lat": Number(event.event_coordenate?.split(',')[0].trim()),
+                    "lng": Number(event.event_coordenate?.split(',')[1].trim())
+                },
+            }
+        });
+
+        return formattedEvents;
+
+    } catch (err) {
         return {
-            'code': 4,
-            'msg' : 'Usuário já afiliado a igreja'
+            'code': 1,
+            'msg' : 'Nenhum Evento cadastrado na religião determinada',
+            'err' : err 
         }
     }
+}
 
+interface joinChurchProps{
+    id_user: number,
+    username: string,
+    id_church: number,
+    roomId: string,
+}
+export async function joinChurch({ id_user, username, id_church, roomId}: joinChurchProps){
     try {
         const affiliate = await prisma.tbl_relation.create({
             data: {
@@ -76,8 +166,25 @@ export async function joinChurch({ id_user, id_church }: joinChurchProps){
                 relation: 1
             }
         });
-
-        if(affiliate){
+        const affiliateRoom = await rooms.updateOne(
+            {"_id": roomId},
+            {$push : {
+                "users": {
+                        "idUser": id_user,
+                        "name":  username
+                }
+            }
+        })  
+        const joinMainChat = await chats.updateOne(
+            {"_id": roomId},
+            {$push : {
+                "users": {
+                        "idUser": id_user,
+                        "name":  username
+                }
+            }
+        })       
+        if(affiliate && affiliateRoom){
             return {
                 'code': 1,
                 'msg' : 'Usuário filiado com sucesso' 
