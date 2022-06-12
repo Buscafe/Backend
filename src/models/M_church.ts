@@ -95,12 +95,13 @@ export async function findAllChurches(religion: string, idUser: number){
 }
 
 interface formattedEventsProps{
-    "id_event": number,
-    "title": string | null,
-    "event_desc":string | null,
-    "event_duration": number | null,
-    "event_date": string | null,
-    "event_coordenate": {
+    FK_id_corp: number | null,
+    id_event: number,
+    title: string | null,
+    event_desc:string | null,
+    event_duration: number | null,
+    event_date: string | null,
+    event_coordenate: {
         lat: number,
         lng: number,
     },
@@ -123,11 +124,13 @@ export async function findAllEvents(religion: string, idUser: number){
                 event_duration: true, 
                 event_date: true, 
                 event_coordenate: true,
+                FK_id_corp: true
             }
         });
 
         const formattedEvents: formattedEventsProps[] = allEvents.map((event) => {     
             return {
+                "FK_id_corp": event.FK_id_corp,
                 "id_event": event.id_event,
                 "title": event.title,
                 "event_desc": event.event_desc,
@@ -141,7 +144,6 @@ export async function findAllEvents(religion: string, idUser: number){
         });
 
         return formattedEvents;
-
     } catch (err) {
         return {
             'code': 1,
