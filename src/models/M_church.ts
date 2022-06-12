@@ -95,12 +95,13 @@ export async function findAllChurches(religion: string, idUser: number){
 }
 
 interface formattedEventsProps{
-    "id_event": number,
-    "title": string | null,
-    "event_desc":string | null,
-    "event_duration": number | null,
-    "event_date": string | null,
-    "event_coordenate": {
+    FK_id_corp: number | null,
+    id_event: number,
+    title: string | null,
+    event_desc:string | null,
+    event_duration: number | null,
+    event_date: string | null,
+    event_coordenate: {
         lat: number,
         lng: number,
     },

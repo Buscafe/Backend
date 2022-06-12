@@ -107,7 +107,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             } else {
                 formattedUser.church = null;
             }            
-
+           
             const secret = process.env.SECRET_JWT ?? '';
             const token = jwt.sign(formattedUser, secret, {
                 expiresIn: 300 // expires in 5min
