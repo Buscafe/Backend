@@ -37,12 +37,27 @@ export async function createSession({ priceId, successUrl, cancelUrl }: createSe
 
         return {
             sessionId: stripeCheckoutSession.id,
+            session: stripeCheckoutSession
         }
     } catch (err) {
         return {
             'code': 2,
             'msg' : 'Não foi possível criar uma sessão do produto',
             'err' : err 
+        }
+    }
+}
+
+export async function getSession(id: string){
+    try {
+        const session = await stripe.checkout.sessions.retrieve(id);
+
+        return {session}
+    } catch (error) {
+        return {
+            'code': 2,
+            'msg' : 'Não foi possível criar uma sessão do produto',
+            'err' : error 
         }
     }
 }
