@@ -67,7 +67,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                 "lng": Number(user.coordinate?.split(',')[1])
             },
             "email": user.email,
-            "devices": devices
+            "devices": devices,
         }
 
         if(user.type === '1'){
