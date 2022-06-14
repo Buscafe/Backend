@@ -3,6 +3,7 @@ export interface User {
     usuario: string;
     nome: string;
     religiao: string;
+    isPayed?: boolean | null;
     localizacao: {
         estado: string,
         cidade: string

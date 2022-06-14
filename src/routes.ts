@@ -24,6 +24,7 @@ router.post('/login', loginUser.handle);
 router.post('/user/insert', user.insert);
 router.post('/user/update', user.update);
 router.post('/user/update/coordinate', user.updateCoords);
+router.patch('/user/update/payment/:id_user', user.updatePayment)
 router.delete('/user/delete/device/:id', user.removeDevice);
 
 // Chat routes

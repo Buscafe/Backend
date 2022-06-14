@@ -221,3 +221,22 @@ export async function removeIp( id: number ){
         }
     }
 }
+
+export async function changePayment(id_user: number){
+    try {
+        const updatePayment = await prisma.tbl_user.update({
+            data: { isPayed: true },
+            where: { id_user }
+        });
+
+        return {
+            'code' : 1,
+            'msg'  : 'Pagamento alterado com sucesso'
+        } 
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        }
+    }
+}

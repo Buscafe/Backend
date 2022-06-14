@@ -27,7 +27,8 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             coordinate: true,
             email: true,
             type: true,
-            password: true
+            password: true,
+            isPayed: true
         }
     });
 
@@ -104,6 +105,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     lat: Number(church.coordinate?.split(',')[0]),
                     lng: Number(church.coordinate?.split(',')[1])
                 };
+                formattedUser.isPayed = user.isPayed;
             } else {
                 formattedUser.church = null;
             }            
