@@ -28,7 +28,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             email: true,
             type: true,
             password: true,
-            isPayed: true
+            isPayed: true,
         }
     });
 
@@ -90,6 +90,9 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     roomId: true,
                     coordinate: true,
                     color: true,
+                    tbl_doc: {
+                        select: { cpf: true, cnpj: true, id_doc: true }
+                    }
                 }
             });
 
@@ -106,8 +109,10 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     lng: Number(church.coordinate?.split(',')[1])
                 };
                 formattedUser.isPayed = user.isPayed;
+                formattedUser.id_doc = church.tbl_doc?.id_doc;
             } else {
                 formattedUser.church = null;
+                formattedUser.isPayed = user.isPayed;
             }            
            
             const secret = process.env.SECRET_JWT ?? '';

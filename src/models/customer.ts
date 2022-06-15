@@ -83,7 +83,6 @@ interface updateUserProps{
     ip: string
 }
 export async function updateUser({email, pass, ip}: updateUserProps){
-    console.log(email, pass, ip)
     if(pass !== ''){
         //UPDATE PASS
         const user = await prisma.tbl_user.findUnique({

@@ -186,7 +186,7 @@ export async function joinChurch({ id_user, username, id_church, roomId}: joinCh
                 }
             }
         })   
-        console.log(joinMainChat)    
+  
         if(affiliate && affiliateRoom){
             return {
                 'code': 1,

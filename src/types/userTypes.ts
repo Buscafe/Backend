@@ -25,4 +25,5 @@ export interface User {
         id_corp: number,
         color: string | null,
     } | null;
+    id_doc?: number | undefined
 }

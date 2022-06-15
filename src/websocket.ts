@@ -44,7 +44,6 @@ io.on("connection", socket  => {
 
     // Add group
     socket.on('addChat', (data: AddChatProps, receivers) => { 
-        console.log(receivers)
 
         const members = getUser(receivers);
         members.map(member => {

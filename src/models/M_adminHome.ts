@@ -11,15 +11,14 @@ const prisma = new PrismaClient();
 interface insertChurchAdminProps {
     name: string,
     description: string,
-    cpf: string,
-    cnpj: string,
+    id_doc: number,
     users: { idUser: number, name: string }[],
     idUser: number,
     username: string,
     coords: {lat: number, lng: number},
     color: string,
 }
-export async function insertChurchAdmin({ name, description, cpf, cnpj, users, idUser, username, coords, color }: insertChurchAdminProps){
+export async function insertChurchAdmin({ name, description, id_doc, users, idUser, username, coords, color }: insertChurchAdminProps){
     try {
         // Insert in mongo for we setting rooms and chats
         const insertRooms = await rooms.insertMany({
@@ -32,7 +31,7 @@ export async function insertChurchAdmin({ name, description, cpf, cnpj, users, i
         const churchMainChat = await chats.insertMany({
             "roomId": insertRooms[0]._id,
             "name": "Grupo Geral",
-            "dexcription": "Grupo Principal da instituição, onde todos os membros se encontrarão!",
+            "description": "Grupo Principal da instituição, onde todos os membros se encontrarão!",
             "users": [
                 {
                         "idUser" : idUser,
@@ -41,16 +40,11 @@ export async function insertChurchAdmin({ name, description, cpf, cnpj, users, i
             ],
             "adminUser": {idUser: idUser, name: username}
         })
-        // Insert first documents for we have a FK_id_doc
-        const insertDoc = await prisma.tbl_doc.create({
-            data: { cpf, cnpj},
-        })
-
         
         await prisma.tbl_corp.create({
             data: {
                 FK_id_user: idUser,
-                FK_id_doc: insertDoc.id_doc,
+                FK_id_doc: id_doc,
                 corpName: name,
                 coordinate: `${coords.lat},${coords.lng}`,
                 corpDesc: description,
@@ -72,12 +66,12 @@ export async function insertChurchAdmin({ name, description, cpf, cnpj, users, i
             "name": name,
             "roomId": id,
         }
+        
         return {
             'code' : 1,
             'msg' : 'Instituição cadastrada com sucesso!',
             'room': formattedChurch
         }
-
     } catch (error) {
         return {
             'status' : 'error',

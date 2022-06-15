@@ -31,7 +31,12 @@ export class ProductsController {
 
         const sessionResponse = await createSession(req.body);
 
-        return res.json(sessionResponse);
+        const formattedSession = {
+            session: sessionResponse,
+            id_doc: insertDocs.id
+        }
+
+        return res.json(formattedSession);
     }
 
     async getCheckoutSession(req: Request, res: Response){
@@ -45,7 +50,7 @@ export class ProductsController {
             } 
         });
 
-        const getSessionResponse = await getSession(req.params.id);
+        const getSessionResponse = await getSession(req.params.checkoutId);
 
         if(getSessionResponse.session?.status == 'complete'){
             await changePayment(Number(req.params.id_user));

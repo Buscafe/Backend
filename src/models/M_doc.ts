@@ -9,11 +9,15 @@ export async function insertDoc(cpf: string, cnpj: string){
         })
 
         if(!hasInsert){
-            await prisma.tbl_doc.create({ data: { cpf, cnpj } });
+            const doc = await prisma.tbl_doc.create({
+                data: { cpf, cnpj },
+                select: { id_doc: true }
+            });
     
             return {
                 'code': 1,
                 'msg' : 'Sucesso na inserção dos documentos',
+                'id'  : doc.id_doc  
             }
         } else {
             return {

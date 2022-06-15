@@ -35,10 +35,7 @@ export async function createSession({ priceId, successUrl, cancelUrl }: createSe
             cancel_url: cancelUrl
         })
 
-        return {
-            sessionId: stripeCheckoutSession.id,
-            session: stripeCheckoutSession
-        }
+        return stripeCheckoutSession
     } catch (err) {
         return {
             'code': 2,
