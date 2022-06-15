@@ -14,7 +14,7 @@ export class AdminHomeController {
 
     // Insert Church
     async insertChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'name', 'description', 'cpf', 'cnpj', 'users', 'idUser', 'username', 'coords', 'color');
+        const responseValidate = validateFields(req.body, 'name', 'description', 'id_doc', 'users', 'idUser', 'username', 'coords', 'color');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -193,6 +193,7 @@ export class AdminHomeController {
 
         return res.json(updateChurchResponse);
     }
+
     // update About Church
     async updateAboutChurch(req: Request, res: Response){
         const responseValidate = validateFields(req.body, 'id_info', 'seats', 'parking', 'accessibility', 'cellphone', 'email', 'facebook');

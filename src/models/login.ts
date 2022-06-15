@@ -27,7 +27,8 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             coordinate: true,
             email: true,
             type: true,
-            password: true
+            password: true,
+            isPayed: true,
         }
     });
 
@@ -66,7 +67,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                 "lng": Number(user.coordinate?.split(',')[1])
             },
             "email": user.email,
-            "devices": devices
+            "devices": devices,
         }
 
         if(user.type === '1'){
@@ -89,6 +90,9 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     roomId: true,
                     coordinate: true,
                     color: true,
+                    tbl_doc: {
+                        select: { cpf: true, cnpj: true, id_doc: true }
+                    }
                 }
             });
 
@@ -104,10 +108,13 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     lat: Number(church.coordinate?.split(',')[0]),
                     lng: Number(church.coordinate?.split(',')[1])
                 };
+                formattedUser.isPayed = user.isPayed;
+                formattedUser.id_doc = church.tbl_doc?.id_doc;
             } else {
                 formattedUser.church = null;
+                formattedUser.isPayed = user.isPayed;
             }            
-
+           
             const secret = process.env.SECRET_JWT ?? '';
             const token = jwt.sign(formattedUser, secret, {
                 expiresIn: 300 // expires in 5min

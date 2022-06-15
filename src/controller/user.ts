@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { validateFields } from "../utils/validateHasProperty";
 
-import { insertUser, updateUser, updateCoordinate, removeIp } from "../models/customer";
+import { insertUser, updateUser, updateCoordinate, removeIp, changePayment } from "../models/customer";
 
 export class UserController {
     async insert(req: Request, res: Response){

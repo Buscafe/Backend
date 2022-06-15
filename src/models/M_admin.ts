@@ -165,8 +165,14 @@ export async function findUsersChat(roomId: String, _id: String){
 
 // --------------------------------------------DELETE ---------------------------------------
 // Delete a chat in a church
-export async function deleteChat(_id: String){
+export async function deleteChat(_id: String, name: String){
     try {
+        if(name === 'Grupo Geral'){
+            return {
+                'code' : 2,
+                'msg' : 'Não se pode deletar o Grupo Geral!'
+            }
+        }
         const chatDeleted = await chats.remove({
             '_id': _id,
         });
