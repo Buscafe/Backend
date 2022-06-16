@@ -19,6 +19,7 @@ export interface User {
         status: number | null,
         dtCreate: Date | null 
     }[];
+    image_url: string | null,
     church?: {
         name: string,
         roomId: string | null,

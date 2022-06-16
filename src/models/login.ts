@@ -29,6 +29,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             type: true,
             password: true,
             isPayed: true,
+            image_url: true
         }
     });
 
@@ -68,6 +69,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             },
             "email": user.email,
             "devices": devices,
+            "image_url": user.image_url
         }
 
         if(user.type === '1'){

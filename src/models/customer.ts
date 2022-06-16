@@ -240,3 +240,26 @@ export async function changePayment(id_user: number){
         }
     }
 }
+
+export async function changeProfilePhoto(id_user: number, image_url: string){
+    try {
+        const updatePhoto = await prisma.tbl_user.update({
+           data: {
+            image_url : image_url
+           },
+           where: {
+            id_user: id_user
+           }
+        });
+
+        return {
+            'code' : 1,
+            'msg'  : 'Foto atualizada com sucesso'
+        } 
+    } catch (error) {
+        return {
+            'status' : 'error',
+            'err' : error
+        }
+    }
+}
