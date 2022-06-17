@@ -244,6 +244,7 @@ export async function changePayment(id_user: number){
 
 export async function changeProfilePhoto(id_user: number, image_url: string){
     try {
+        console.log(id_user, image_url)
         const updatePhotoMySql = await prisma.tbl_user.update({
            data: {
             image_url : image_url
@@ -252,18 +253,20 @@ export async function changeProfilePhoto(id_user: number, image_url: string){
             id_user: id_user
            }
         });
-        // const updatePhotoMongo = await chats.updateOne({
-
-        // })
-        // const UserChatDeleted = await chats.updateMany(
-        //     {idUser}
-        //     {$pull: {users: {'idUser': idUser}}}
-        // )
+        console.log(updatePhotoMySql)
+        const updatePhotoMongo = await chats.updateMany(
+            {users: {$elemMatch: {"idUser": id_user}}}, 
+            {$set: 
+                {"users.$.image_url": image_url}
+            }
+        )
+        console.log('1', updatePhotoMongo)
         return {
             'code' : 1,
             'msg'  : 'Foto atualizada com sucesso'
         } 
     } catch (error) {
+        console.log('2', error)
         return {
             'status' : 'error',
             'err' : error
