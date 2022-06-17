@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import md5 from 'md5'
+import { chats } from '../services/chats';
 
 const prisma = new PrismaClient();
 
@@ -243,7 +244,7 @@ export async function changePayment(id_user: number){
 
 export async function changeProfilePhoto(id_user: number, image_url: string){
     try {
-        const updatePhoto = await prisma.tbl_user.update({
+        const updatePhotoMySql = await prisma.tbl_user.update({
            data: {
             image_url : image_url
            },
@@ -251,7 +252,13 @@ export async function changeProfilePhoto(id_user: number, image_url: string){
             id_user: id_user
            }
         });
-        console.log(updatePhoto)
+        // const updatePhotoMongo = await chats.updateOne({
+
+        // })
+        // const UserChatDeleted = await chats.updateMany(
+        //     {idUser}
+        //     {$pull: {users: {'idUser': idUser}}}
+        // )
         return {
             'code' : 1,
             'msg'  : 'Foto atualizada com sucesso'
