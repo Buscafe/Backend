@@ -251,7 +251,7 @@ export async function changeProfilePhoto(id_user: number, image_url: string){
             id_user: id_user
            }
         });
-
+        console.log(updatePhoto)
         return {
             'code' : 1,
             'msg'  : 'Foto atualizada com sucesso'
