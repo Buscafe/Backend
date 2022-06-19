@@ -19,7 +19,17 @@ interface insertChurchAdminProps {
     color: string,
     image_url: string | null
 }
-export async function insertChurchAdmin({ name, description, id_doc, users, idUser, username, coords, color, image_url }: insertChurchAdminProps){
+export async function insertChurchAdmin({ 
+    name,
+    description,
+    id_doc,
+    users,
+    idUser,
+    username,
+    coords,
+    color,
+    image_url 
+}: insertChurchAdminProps){
     try {
         // Insert in mongo for we setting rooms and chats
         const insertRooms = await rooms.insertMany({
