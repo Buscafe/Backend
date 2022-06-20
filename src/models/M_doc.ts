@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function insertDoc(cpf: string, cnpj: string){
+export async function insertDoc(cpf: string, cnpj: string, id_user: number){
     try {
         const hasInsert = await prisma.tbl_doc.findFirst({
             where: { cpf, cnpj }
@@ -10,10 +10,10 @@ export async function insertDoc(cpf: string, cnpj: string){
 
         if(!hasInsert){
             const doc = await prisma.tbl_doc.create({
-                data: { cpf, cnpj },
+                data: { cpf, cnpj, FK_id_user: id_user },
                 select: { id_doc: true }
             });
-    
+            
             return {
                 'code': 1,
                 'msg' : 'Sucesso na inserção dos documentos',
@@ -27,7 +27,7 @@ export async function insertDoc(cpf: string, cnpj: string){
         }
     } catch (err) {
         return {
-           
+            'code': 3,
             'err' : err 
         }
     }

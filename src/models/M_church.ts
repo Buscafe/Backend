@@ -19,6 +19,7 @@ interface formattedChurchesProps{
             "estado": string | undefined,
             "cidade": string | undefined,
         },
+        image_url: string | null |undefined,
         roomId: string | null,
 }
 interface formattedRelationsProps{
@@ -47,6 +48,7 @@ export async function findAllChurches(religion: string, idUser: number){
                 tbl_user : {
                     select: {
                         localization: true,
+                        image_url: true
                     }
                 }
             }, 
@@ -76,7 +78,8 @@ export async function findAllChurches(religion: string, idUser: number){
                     "cidade": church.tbl_user?.localization.split('/')[1].trim() 
                 },
                 "roomId": church.roomId,
-                "color": church.color
+                "color": church.color, 
+                "image_url": church.tbl_user?.image_url
             }
         });
         const data: formattedRelationsProps = {
@@ -158,8 +161,9 @@ interface joinChurchProps{
     username: string,
     id_church: number,
     roomId: string,
+    image_url: string | null
 }
-export async function joinChurch({ id_user, username, id_church, roomId}: joinChurchProps){
+export async function joinChurch({ id_user, username, id_church, roomId, image_url}: joinChurchProps){
     try {
         const affiliate = await prisma.tbl_relation.create({
             data: {
@@ -173,7 +177,7 @@ export async function joinChurch({ id_user, username, id_church, roomId}: joinCh
             {$push : {
                 "users": {
                         "idUser": id_user,
-                        "name":  username
+                        "name":  username,
                 }
             }
         })  
@@ -182,7 +186,8 @@ export async function joinChurch({ id_user, username, id_church, roomId}: joinCh
             {$push : {
                 "users": {
                         "idUser": id_user,
-                        "name":  username
+                        "name":  username,
+                        "image_url": image_url
                 }
             }
         })   

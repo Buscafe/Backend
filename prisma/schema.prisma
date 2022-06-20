@@ -29,10 +29,14 @@ model tbl_corp {
 }
 
 model tbl_doc {
-  id_doc   Int        @id @default(autoincrement())
-  cpf      String     @db.VarChar(14)
-  cnpj     String     @db.VarChar(18)
-  tbl_corp tbl_corp[]
+  id_doc     Int        @id @default(autoincrement())
+  cpf        String     @db.VarChar(14)
+  cnpj       String     @db.VarChar(18)
+  FK_id_user Int?
+  tbl_user   tbl_user?  @relation(fields: [FK_id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction, map: "FK_doc_id_user")
+  tbl_corp   tbl_corp[]
+
+  @@index([FK_id_user], map: "FK_doc_id_user")
 }
 
 model tbl_user {
@@ -48,8 +52,10 @@ model tbl_user {
   dtCreate     DateTime?      @default(now()) @db.DateTime(0)
   coordinate   String?        @db.VarChar(150)
   isPayed      Boolean?
+  image_url    String?        @db.VarChar(2048)
   tbl_corp     tbl_corp[]
   tbl_devices  tbl_devices[]
+  tbl_doc      tbl_doc[]
   tbl_relation tbl_relation[]
 }
 

@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
         idUser: String,
-        name: String
+        name: String,
+        image_url: String
     },
     { timestamps: true }
 );

@@ -36,7 +36,7 @@ export class ChurchController {
     }
 
     async joinChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'id_user', 'username', 'id_church', 'roomId');
+        const responseValidate = validateFields(req.body, 'id_user', 'username', 'id_church', 'roomId', 'image_url');
 
         responseValidate.map(validate => {
             if(!validate.exists){

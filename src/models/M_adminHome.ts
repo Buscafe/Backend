@@ -17,8 +17,19 @@ interface insertChurchAdminProps {
     username: string,
     coords: {lat: number, lng: number},
     color: string,
+    image_url: string | null
 }
-export async function insertChurchAdmin({ name, description, id_doc, users, idUser, username, coords, color }: insertChurchAdminProps){
+export async function insertChurchAdmin({ 
+    name,
+    description,
+    id_doc,
+    users,
+    idUser,
+    username,
+    coords,
+    color,
+    image_url 
+}: insertChurchAdminProps){
     try {
         // Insert in mongo for we setting rooms and chats
         const insertRooms = await rooms.insertMany({
@@ -27,7 +38,6 @@ export async function insertChurchAdmin({ name, description, id_doc, users, idUs
         })
 
         const id = insertRooms[0]._id.toString().split('"')[0] // Removing Object id notation and saving only the id
-
         const churchMainChat = await chats.insertMany({
             "roomId": insertRooms[0]._id,
             "name": "Grupo Geral",
@@ -35,7 +45,8 @@ export async function insertChurchAdmin({ name, description, id_doc, users, idUs
             "users": [
                 {
                         "idUser" : idUser,
-                        "name": username			
+                        "name": username, 
+                        "image_url": image_url		
                 }
             ],
             "adminUser": {idUser: idUser, name: username}

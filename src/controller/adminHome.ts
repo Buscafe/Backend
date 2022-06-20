@@ -14,7 +14,7 @@ export class AdminHomeController {
 
     // Insert Church
     async insertChurch(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'name', 'description', 'id_doc', 'users', 'idUser', 'username', 'coords', 'color');
+        const responseValidate = validateFields(req.body, 'name', 'description', 'id_doc', 'users', 'idUser', 'username', 'coords', 'color', 'image_url');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -25,7 +25,7 @@ export class AdminHomeController {
         });
 
         const insertChurchResponse = await insertChurchAdmin(req.body);
-
+        
         return res.json(insertChurchResponse);
     }
     // Insert About Church

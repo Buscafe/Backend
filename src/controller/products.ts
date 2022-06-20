@@ -13,7 +13,7 @@ export class ProductsController {
     }
 
     async subscribe(req: Request, res: Response){
-        const responseValidate = validateFields(req.body, 'priceId', 'successUrl', 'cancelUrl', 'cpf', 'cnpj');
+        const responseValidate = validateFields(req.body, 'priceId', 'successUrl', 'cancelUrl', 'cpf', 'cnpj', 'id_user');
 
         responseValidate.map(validate => {
             if(!validate.exists){
@@ -23,7 +23,7 @@ export class ProductsController {
             } 
         });
 
-        const insertDocs = await insertDoc(req.body.cpf, req.body.cnpj)
+        const insertDocs = await insertDoc(req.body.cpf, req.body.cnpj, req.body.id_user)
         
         if(insertDocs.err){
             return res.json({err: insertDocs.err, msg: insertDocs.msg});

@@ -19,11 +19,12 @@ export interface User {
         status: number | null,
         dtCreate: Date | null 
     }[];
+    image_url: string | null,
     church?: {
         name: string,
         roomId: string | null,
         id_corp: number,
         color: string | null,
     } | null;
-    id_doc?: number | undefined
+    id_doc?: number
 }

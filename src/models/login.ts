@@ -29,6 +29,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             type: true,
             password: true,
             isPayed: true,
+            image_url: true
         }
     });
 
@@ -68,6 +69,7 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
             },
             "email": user.email,
             "devices": devices,
+            "image_url": user.image_url
         }
 
         if(user.type === '1'){
@@ -90,29 +92,31 @@ export async function loginUser({ email, pass, ip }: LoginProps) {
                     roomId: true,
                     coordinate: true,
                     color: true,
-                    tbl_doc: {
-                        select: { cpf: true, cnpj: true, id_doc: true }
-                    }
                 }
             });
 
+            const doc = await prisma.tbl_doc.findFirst({
+                where: { FK_id_user: user.id_user },
+                select: { id_doc: true }
+            })
+            
             if(church){
                 formattedUser.church = {
                     name: church.corpName,
                     roomId: church.roomId,
                     id_corp: church.id_corp,
                     color: church.color,
-                    
                 };
                 formattedUser.coordinate = {
                     lat: Number(church.coordinate?.split(',')[0]),
                     lng: Number(church.coordinate?.split(',')[1])
                 };
                 formattedUser.isPayed = user.isPayed;
-                formattedUser.id_doc = church.tbl_doc?.id_doc;
+                formattedUser.id_doc = doc?.id_doc;
             } else {
                 formattedUser.church = null;
                 formattedUser.isPayed = user.isPayed;
+                formattedUser.id_doc = doc?.id_doc;
             }            
            
             const secret = process.env.SECRET_JWT ?? '';
