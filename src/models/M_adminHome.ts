@@ -502,7 +502,7 @@ interface updateChurchAdminProps {
     color: string,
     
 }
-export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, description, cpf, cnpj, coords, color }: updateChurchAdminProps){
+export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, description, coords, color }: updateChurchAdminProps){
     try{
         // Insert in mongo for we setting rooms and chats
         const updateRooms = await rooms.updateOne(                
@@ -510,13 +510,7 @@ export async function updateChurchAdmin({ roomId, id_doc, id_corp, name, descrip
             {$set: {
                 'name': name,
             }})
-        const updateDoc = await prisma.tbl_doc.update({
-            where:{
-                id_doc
-            },
-            data: { cpf, cnpj},
-        });
-        
+
         await prisma.tbl_corp.update({
             where: {
                 id_corp, 
