@@ -178,6 +178,7 @@ export async function joinChurch({ id_user, username, id_church, roomId, image_u
                 "users": {
                         "idUser": id_user,
                         "name":  username,
+                        "image_url": image_url
                 }
             }
         })  

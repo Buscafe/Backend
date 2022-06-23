@@ -20,7 +20,7 @@ export async function insertChatAdmin({ roomId, name, description, users, adminU
         const chatExists = await chats.find({
             "roomId": roomId,
             "name": name
-        })
+        })        
         
         if(chatExists.length === 0){
             const insertChat = await chats.insertMany({
