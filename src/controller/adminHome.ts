@@ -25,7 +25,7 @@ export class AdminHomeController {
         });
 
         const insertChurchResponse = await insertChurchAdmin(req.body);
-        
+ 
         return res.json(insertChurchResponse);
     }
     // Insert About Church

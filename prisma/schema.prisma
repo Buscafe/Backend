@@ -11,9 +11,9 @@ model tbl_corp {
   id_corp      Int            @id @default(autoincrement())
   FK_id_user   Int?
   FK_id_doc    Int?
-  corpName     String         @db.VarChar(50)
+  corpName     String         @db.VarChar(70)
   coordinate   String         @db.VarChar(150)
-  corpDesc     String         @db.VarChar(200)
+  corpDesc     String         @db.VarChar(300)
   roomId       String?        @unique(map: "roomId") @db.VarChar(50)
   color        String?        @db.VarChar(7)
   tbl_doc      tbl_doc?       @relation(fields: [FK_id_doc], references: [id_doc], onDelete: NoAction, onUpdate: NoAction, map: "FK_id_doc")
