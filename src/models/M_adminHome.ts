@@ -222,6 +222,17 @@ interface insertConvertionAdminProps {
 }
 export async function insertEventAdmin({ title, event_desc, event_duration, event_date, coords, FK_id_corp }: insertConvertionAdminProps){
     try {
+        const event = await prisma.tbl_events.findMany({
+            where:{
+                title: title
+            }
+        })
+        if (event.length > 0) {
+            return {
+                'code' : 2,
+                'msg' : 'Evento já cadastrado!',
+            }
+        }
         // formated time
         function pad(t: any) {
             return t.toString().padStart(2, 0);
@@ -274,6 +285,18 @@ export async function insertDonateChurchAdmin({ keyType, keyValue, roomId }: ins
                 'msg' : 'Insira um chave válida!',
             } 
         } 
+
+        const donate = await prisma.tbl_donate.findMany({
+            where: {
+                donate_key: keyValue
+            }
+        })
+        if (donate.length > 0)  {
+            return {
+                'code' : 2,
+                'msg' : 'Chave Pix já cadastrada!',
+            }
+        }
         // Find church for create info about it
         const church = await prisma.tbl_corp.findUnique({
             where: {
@@ -282,26 +305,19 @@ export async function insertDonateChurchAdmin({ keyType, keyValue, roomId }: ins
                 id_corp: true, 
             },
         })
-        if (!church){
-            return {
-                'code' : 2,
-                'msg' : 'Primeiro se deve cadastrar as informações básicas sobre a instituição!',
-            } 
-        }
-        
+
         // Create Donate
         await prisma.tbl_donate.create({
             data: {
                 key_type: keyType,
                 donate_key: keyValue,
-                FK_id_corp: church.id_corp
+                FK_id_corp: church?.id_corp
             },
         });
         return {
             'code' : 1,
             'msg' : 'Chave Pix cadastrada com sucesso!',
-        }
-
+        }       
     } catch (error) {
         return {
             'status' : 'error',
